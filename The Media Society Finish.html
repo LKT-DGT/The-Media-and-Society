@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Media & Society</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f0e0e;
+  --paper: #f5f0e8;
+  --accent: #d4342a;
+  --accent2: #1a6b3c;
+  --highlight: #f0c040;
+  --muted: #7a736a;
+  --card-bg: #fffdf7;
+  --border: #d0c8b8;
+  --sidebar-w: 260px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--paper); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background-image:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(0,0,0,0.025) 28px,rgba(0,0,0,0.025) 29px); pointer-events:none; z-index:0; }
+
+/* SIDEBAR */
+#sidebar { width:var(--sidebar-w); min-height:100vh; background:var(--ink); color:var(--paper); position:fixed; left:0;top:0;bottom:0; z-index:100; display:flex; flex-direction:column; overflow-y:auto; transition:transform 0.3s ease; }
+.sidebar-logo { padding:1.5rem 1.4rem 1rem; border-bottom:1px solid rgba(255,255,255,0.1); cursor:pointer; }
+.sidebar-logo h2 { font-family:'Playfair Display',serif; font-size:1.25rem; line-height:1.2; }
+.sidebar-logo h2 span { color:var(--highlight); font-style:italic; }
+.sidebar-logo p { font-family:'Space Mono',monospace; font-size:0.5rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-top:0.3rem; }
+.sb-section { font-family:'Space Mono',monospace; font-size:0.5rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:0.9rem 1.4rem 0.3rem; }
+.nav-item { display:flex; align-items:center; gap:0.7rem; padding:0.6rem 1.4rem; font-size:0.8rem; color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.15s; border-left:3px solid transparent; }
+.nav-item:hover { background:rgba(255,255,255,0.07); color:var(--paper); }
+.nav-item.active { color:var(--highlight); border-left-color:var(--highlight); background:rgba(240,192,64,0.08); }
+.nav-icon { display:none; }
+.sb-divider { border:none; border-top:1px solid rgba(255,255,255,0.08); margin:0.4rem 0; }
+#sidebarToggle { display:none; position:fixed; top:0.8rem; left:0.8rem; z-index:200; background:var(--ink); color:var(--paper); border:none; width:2rem; height:2rem; font-size:0.9rem; cursor:pointer; }
+
+/* MAIN */
+#main { margin-left:var(--sidebar-w); flex:1; position:relative; z-index:1; }
+.page { display:none; width:100%; }
+.page.active { display:block; width:100%; padding-bottom:80px; }
+
+/* HOME */
+.home-hero { background:var(--ink); color:var(--paper); padding:3.5rem 3rem 2.5rem; position:relative; overflow:hidden; width:calc(100vw - var(--sidebar-w)); box-sizing:border-box; }
+.home-hero::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px); }
+.eyebrow { font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--highlight); margin-bottom:0.8rem; position:relative; }
+.home-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,5vw,3.8rem); font-weight:700; line-height:1.05; letter-spacing:-0.02em; margin-bottom:0.5rem; position:relative; }
+.home-hero h1 em { color:var(--highlight); font-style:italic; }
+.hero-sub { font-size:0.95rem; line-height:1.75; color:rgba(255,255,255,0.6); max-width:560px; position:relative; margin-top:1rem; }
+.home-intro { padding:2.5rem 3rem; max-width:820px; }
+.home-intro h2 { font-family:'Playfair Display',serif; font-size:1.45rem; margin-bottom:0.7rem; }
+.home-intro p { font-size:0.9rem; line-height:1.85; color:#3a3530; margin-bottom:0.9rem; }
+.home-intro p strong { color:var(--ink); }
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); border-top:2px solid var(--ink); border-bottom:1px solid var(--border); margin:0 3rem 2.5rem; }
+.stat-item { padding:1.1rem 1.4rem; border-right:1px solid var(--border); }
+.stat-item:last-child { border-right:none; }
+.stat-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--accent); line-height:1; margin-bottom:0.2rem; }
+.stat-label { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+.topic-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; padding:0 3rem 3rem; }
+.topic-btn { background:var(--card-bg); border:1px solid var(--border); border-top:4px solid var(--ink); padding:1.4rem 1.6rem; cursor:pointer; text-align:left; transition:all 0.2s; position:relative; overflow:hidden; }
+.topic-btn::after { content:'→'; position:absolute; right:1.1rem; bottom:1.1rem; font-size:1.1rem; color:var(--border); transition:all 0.2s; }
+.topic-btn:hover { transform:translateY(-3px); box-shadow:0 8px 22px rgba(0,0,0,0.1); }
+.topic-btn:hover::after { color:var(--ink); right:0.8rem; }
+.topic-btn.t1 { border-top-color:var(--accent); }
+.topic-btn.t2 { border-top-color:var(--accent2); }
+.topic-btn.t3 { border-top-color:#b07c00; }
+.topic-btn.t4 { border-top-color:#1a3c6b; }
+.tb-icon { display:none; }
+.tb-tag { font-family:'Space Mono',monospace; font-size:0.52rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+.tb-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; margin-bottom:0.35rem; line-height:1.3; }
+.tb-desc { font-size:0.76rem; line-height:1.55; color:var(--muted); padding-right:1.4rem; }
+
+/* PAGE STRUCTURE */
+.section-label { font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); border-top:2px solid var(--ink); padding-top:0.4rem; margin-bottom:1.1rem; }
+.page-header {
+  background:var(--ink);
+  color:var(--paper);
+  padding:1.8rem 3rem 1.4rem;
+  width:calc(100vw - var(--sidebar-w));
+  max-width:none;
+  box-sizing:border-box;
+  display:block;
+}
+.back-btn { font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); cursor:pointer; margin-bottom:0.7rem; display:inline-flex; align-items:center; gap:0.35rem; background:none; border:none; }
+.back-btn:hover { color:var(--highlight); }
+.page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3.5vw,2.4rem); font-weight:700; line-height:1.15; margin-bottom:0.35rem; }
+.page-header h1 em { color:var(--highlight); font-style:italic; }
+.page-header .sub { font-family:'DM Sans',sans-serif; font-size:0.95rem; line-height:1.75; color:rgba(255,255,255,0.6); letter-spacing:0; }
+.content-wrap { padding:2rem 3rem; max-width:880px; margin:0; }
+
+/* VIDEO */
+.video-block { background:#000; margin-bottom:2rem; }
+.video-block video { width:100%; display:block; max-height:460px; }
+.video-caption { background:var(--ink); padding:0.55rem 1.1rem; font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--highlight); }
+
+/* GLOSSARY DRAWER */
+.g-acc { border-top: 1px solid var(--border); }
+.g-item { border-bottom: 1px solid var(--border); }
+.g-header { display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; cursor:pointer; background:var(--card-bg); transition:background 0.15s; user-select:none; }
+.g-header:hover { background:#ede8dc; }
+.g-item.open .g-header { background:var(--ink); color:var(--paper); }
+.g-icon { font-size:0.9rem; flex-shrink:0; }
+.g-term { font-family:'Playfair Display',serif; font-size:0.88rem; font-weight:700; flex:1; line-height:1.3; }
+.g-arrow { font-size:0.65rem; color:var(--muted); transition:transform 0.25s ease; margin-left:auto; flex-shrink:0; }
+.g-item.open .g-arrow { transform:rotate(90deg); color:var(--paper); }
+.g-body { display:none; padding:0.85rem 1rem 0.85rem 2.3rem; background:#faf8f3; border-top:1px solid var(--border); animation:fadeUp 0.2s ease; }
+.g-item.open .g-body { display:block; }
+.g-body p { font-size:0.8rem; line-height:1.75; color:#2a2520; margin-bottom:0.4rem; }
+.g-body strong { color:var(--ink); }
+.g-ex { font-family:'Space Mono',monospace; font-size:0.56rem; line-height:1.5; color:var(--muted); border-left:2px solid var(--border); padding-left:0.5rem; margin-top:0.3rem; }
+
+/* MIND MAP HOTSPOTS */
+#mindmapWrap { position:relative; }
+.mm-hotspot {
+  position:absolute; cursor:pointer;
+  border: 2px solid transparent; border-radius: 4px;
+  transition: all 0.2s; z-index: 5;
+}
+.mm-hotspot:hover {
+  background: rgba(212,52,42,0.12);
+  border-color: rgba(212,52,42,0.5);
+}
+.mm-hotspot:hover::after {
+  content: 'Click to explore →';
+  position:absolute; bottom:-1.6rem; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:var(--highlight);
+  font-family:'Space Mono',monospace; font-size:0.5rem; letter-spacing:0.1em;
+  padding:2px 7px; white-space:nowrap; pointer-events:none; z-index:20;
+}
+.mm-label {
+  position:absolute; font-family:'Space Mono',monospace; font-size:0.48rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--accent);
+  background:rgba(255,253,247,0.9); padding:2px 5px; pointer-events:none; z-index:6;
+}
+#mmPopup { display:none; }
+#mmPopup.open { display:flex !important; }
+
+/* Glossary drawer overlay for mobile */
+#glossaryOverlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:299; }
+#glossaryOverlay.open { display:block; }
+
+
+
+/* LIGHTBOX */
+#lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:999; align-items:center; justify-content:center; cursor:zoom-out; padding:1.5rem; }
+#lightbox.open { display:flex; }
+#lightbox img { max-width:95vw; max-height:92vh; object-fit:contain; }
+.lb-close { position:absolute; top:1rem; right:1.5rem; color:white; font-size:1.8rem; cursor:pointer; background:none; border:none; line-height:1; }
+
+/* ACCORDION */
+.accordion { border:1px solid var(--border); margin-bottom:2rem; }
+.acc-item { border-bottom:1px solid var(--border); }
+.acc-item:last-child { border-bottom:none; }
+.acc-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 1rem; cursor:pointer; background:var(--card-bg); transition:background 0.15s; user-select:none; }
+.acc-header:hover { background:#ede8dc; }
+.acc-item.open .acc-header { background:var(--ink); color:var(--paper); }
+.acc-icon { font-size:0.95rem; flex-shrink:0; }
+.acc-term { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; flex:1; }
+.acc-tag { font-family:'Space Mono',monospace; font-size:0.48rem; letter-spacing:0.08em; text-transform:uppercase; padding:2px 5px; color:white; flex-shrink:0; }
+.acc-tag-m { background:var(--accent); }
+.acc-tag-i { background:var(--accent2); }
+.acc-tag-s { background:#1a3c6b; }
+.acc-arrow { font-size:0.68rem; color:var(--muted); transition:transform 0.25s ease; margin-left:auto; flex-shrink:0; }
+.acc-item.open .acc-arrow { transform:rotate(90deg); color:var(--paper); }
+.acc-body { display:none; padding:0.9rem 1.1rem 0.9rem 2.6rem; background:var(--card-bg); border-top:1px solid var(--border); }
+.acc-item.open .acc-body { display:block; animation:fadeUp 0.2s ease; }
+.acc-body p { font-size:0.82rem; line-height:1.75; color:#2a2520; margin-bottom:0.45rem; }
+.acc-body strong { color:var(--ink); }
+.acc-example { font-family:'Space Mono',monospace; font-size:0.58rem; line-height:1.5; color:var(--muted); border-left:2px solid var(--border); padding-left:0.6rem; margin-top:0.4rem; }
+
+/* QUIZ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.question-card { background:var(--card-bg); border:1px solid var(--border); margin-bottom:1.1rem; padding:1.3rem 1.5rem; animation:fadeUp 0.35s ease both; }
+.q-number { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.2em; color:var(--muted); margin-bottom:0.45rem; display:block; }
+.q-type-badge { float:right; font-family:'Space Mono',monospace; font-size:0.5rem; letter-spacing:0.1em; background:var(--highlight); color:var(--ink); padding:2px 6px; text-transform:uppercase; }
+.question-text { font-family:'Playfair Display',serif; font-size:1rem; line-height:1.5; margin-bottom:0.9rem; font-weight:700; clear:both; }
+.matching-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem 1.1rem; }
+.matching-col-label { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; padding-bottom:0.25rem; border-bottom:1px solid var(--border); }
+.term-item,.def-item { padding:0.4rem 0.7rem; font-size:0.82rem; margin-bottom:0.3rem; cursor:pointer; transition:all 0.15s; user-select:none; }
+.term-item { background:var(--paper); border:1px solid var(--border); font-weight:500; }
+.def-item { background:var(--paper); border:1px dashed var(--border); line-height:1.4; }
+.term-item:hover,.def-item:hover { border-color:var(--ink); background:#ede8dc; }
+.term-item.selected { background:var(--ink); color:var(--paper); border:1px solid var(--ink); }
+.def-item.highlight { background:var(--ink); color:var(--paper); border:1px solid var(--ink); }
+.matched-correct { background:#d4edda!important; border-color:var(--accent2)!important; color:var(--accent2)!important; cursor:default!important; }
+.matched-wrong { background:#fde8e8!important; border-color:var(--accent)!important; color:var(--accent)!important; cursor:default!important; }
+.mc-options { display:flex; flex-direction:column; gap:0.4rem; }
+.mc-option { background:var(--paper); border:1px solid var(--border); padding:0.5rem 0.85rem; font-size:0.82rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:0.65rem; user-select:none; }
+.mc-option:hover { border-color:var(--ink); background:#ede8dc; }
+.opt-letter { font-family:'Space Mono',monospace; font-size:0.62rem; font-weight:700; min-width:1.25rem; height:1.25rem; display:flex; align-items:center; justify-content:center; border:1px solid var(--muted); flex-shrink:0; }
+.mc-option.selected { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.mc-option.selected .opt-letter { border-color:var(--paper); }
+.mc-option.correct,.mc-option.revealed-correct { background:#d4edda; border-color:var(--accent2); color:var(--accent2); }
+.mc-option.wrong { background:#fde8e8; border-color:var(--accent); color:var(--accent); }
+.tf-options { display:flex; gap:0.65rem; }
+.tf-btn { flex:1; padding:0.65rem; font-family:'Space Mono',monospace; font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; border:2px solid var(--border); background:var(--paper); cursor:pointer; transition:all 0.15s; }
+.tf-btn:hover { border-color:var(--ink); background:#ede8dc; }
+.tf-btn.selected { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.tf-btn.correct,.tf-btn.revealed-correct { background:#d4edda; border-color:var(--accent2); color:var(--accent2); }
+.tf-btn.wrong { background:#fde8e8; border-color:var(--accent); color:var(--accent); }
+.feedback { margin-top:0.65rem; padding:0.5rem 0.7rem; font-size:0.78rem; line-height:1.5; border-left:3px solid; display:none; }
+.feedback.correct { border-color:var(--accent2); background:#f0faf4; color:#1a5c30; }
+.feedback.wrong { border-color:var(--accent); background:#fff5f5; color:#8b1c1c; }
+.progress-wrap { background:var(--border); height:4px; }
+.progress-bar { height:4px; background:var(--accent); width:0%; transition:width 0.5s ease; }
+.submit-wrap { text-align:center; margin:1.5rem 0; }
+.score-display { text-align:center; padding:2rem; background:var(--card-bg); border:1px solid var(--border); margin-bottom:1.4rem; }
+.score-number { font-family:'Playfair Display',serif; font-size:3.8rem; font-weight:700; line-height:1; color:var(--accent); }
+.score-label { font-family:'Space Mono',monospace; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-top:0.2rem; }
+.score-message { font-family:'Playfair Display',serif; font-size:1.1rem; font-style:italic; margin-top:0.7rem; }
+.breakdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:0.7rem; margin-bottom:1.4rem; }
+.breakdown-card { background:var(--card-bg); border:1px solid var(--border); padding:0.9rem 1.1rem; }
+.breakdown-topic { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+.breakdown-score { font-size:1.2rem; font-weight:700; margin-bottom:0.2rem; }
+.breakdown-bar-wrap { background:var(--border); height:4px; }
+.breakdown-bar { height:4px; transition:width 0.8s ease; }
+.repeat-topics { display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.5rem; }
+.topic-pill { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.2rem 0.55rem; border:1px solid var(--accent); color:var(--accent); background:#fff5f5; }
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* BUTTONS */
+.btn-primary { font-family:'Space Mono',monospace; font-size:0.68rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; background:var(--accent); color:white; border:none; padding:0.85rem 2rem; cursor:pointer; transition:all 0.2s; }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(212,52,42,0.3); }
+.btn-primary:disabled { background:var(--muted); cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-secondary { font-family:'Space Mono',monospace; font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; background:transparent; color:var(--ink); border:2px solid var(--ink); padding:0.7rem 1.6rem; cursor:pointer; transition:all 0.15s; }
+.btn-secondary:hover { background:var(--ink); color:var(--paper); }
+.flex-center { display:flex; justify-content:center; gap:0.7rem; flex-wrap:wrap; }
+.mt-2{margin-top:1rem}.mt-3{margin-top:1.5rem}
+
+/* TOPIC 2 THREE PILLARS */
+.pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; margin-bottom:2rem; }
+.pillar { padding:1rem 1.1rem; text-align:center; color:var(--paper); }
+.pillar-icon { font-size:1.5rem; margin-bottom:0.3rem; }
+.pillar-name { font-family:'Space Mono',monospace; font-size:0.52rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.2rem; color:var(--highlight); }
+.pillar-desc { font-size:0.72rem; line-height:1.5; }
+
+/* FACT-CHECK */
+.fc-tool-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0.7rem; margin-bottom:2rem; }
+.fc-tool-card { background:var(--card-bg); border:1px solid var(--border); border-top:3px solid var(--ink); padding:0.9rem 1rem; }
+.fc-tool-name { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; margin-bottom:0.25rem; }
+.fc-tool-name a { color:inherit; text-decoration:none; }
+.fc-tool-name a:hover { color:var(--accent); }
+.fc-tool-desc { font-size:0.76rem; line-height:1.55; color:#3a3530; margin-bottom:0.35rem; }
+.fc-tool-best { font-family:'Space Mono',monospace; font-size:0.55rem; color:var(--muted); }
+.fc-steps { background:var(--card-bg); border:1px solid var(--border); padding:1.4rem 1.6rem; margin-bottom:2rem; }
+.fc-step { display:flex; gap:0.9rem; margin-bottom:0.9rem; align-items:flex-start; }
+.fc-step-num { font-family:'Playfair Display',serif; font-size:1.7rem; font-weight:700; color:var(--accent); line-height:1; min-width:1.6rem; }
+.fc-step-content h4 { font-family:'Space Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.25rem; }
+.fc-step-content p { font-size:0.81rem; line-height:1.65; color:#3a3530; }
+.tool-links { display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.35rem; }
+.tool-tag { font-family:'Space Mono',monospace; font-size:0.52rem; letter-spacing:0.08em; background:var(--highlight); color:var(--ink); padding:2px 6px; text-transform:uppercase; text-decoration:none; }
+.claim-card { background:var(--card-bg); border:1px solid var(--border); border-left:4px solid var(--accent); padding:0.85rem 1rem; margin-bottom:0.6rem; animation:fadeUp 0.35s ease both; }
+.claim-num { font-family:'Space Mono',monospace; font-size:0.52rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem; }
+.claim-text { font-family:'Playfair Display',serif; font-size:0.92rem; font-style:italic; line-height:1.45; margin-bottom:0.25rem; }
+.claim-source { font-size:0.7rem; color:var(--muted); }
+.claim-difficulty { float:right; font-family:'Space Mono',monospace; font-size:0.5rem; letter-spacing:0.1em; text-transform:uppercase; padding:2px 5px; }
+.diff-easy{background:#d4edda;color:#1a5c30}.diff-medium{background:#fff3cd;color:#856404}.diff-hard{background:#fde8e8;color:#8b1c1c}
+.report-form { background:var(--card-bg); border:1px solid var(--border); padding:1.4rem 1.6rem; }
+.report-form h3 { font-family:'Playfair Display',serif; font-size:1.15rem; border-bottom:2px solid var(--ink); padding-bottom:0.5rem; margin-bottom:1rem; }
+.report-field { margin-bottom:0.9rem; }
+.report-label { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.25rem; }
+.report-input,.report-textarea { width:100%; font-family:'DM Sans',sans-serif; font-size:0.83rem; padding:0.5rem 0.7rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); outline:none; transition:border-color 0.15s; }
+.report-input:focus,.report-textarea:focus { border-color:var(--ink); }
+.report-textarea { min-height:70px; resize:vertical; line-height:1.6; }
+.verdict-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.35rem; }
+.verdict-btn { font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.06em; text-transform:uppercase; padding:0.5rem; border:2px solid var(--border); background:var(--paper); cursor:pointer; text-align:center; transition:all 0.15s; }
+.verdict-btn:hover { border-color:var(--ink); }
+.verdict-btn.v-true{border-color:var(--accent2);background:#d4edda;color:var(--accent2)}
+.verdict-btn.v-false{border-color:var(--accent);background:#fde8e8;color:var(--accent)}
+.verdict-btn.v-misleading{border-color:#b07c00;background:#fff3cd;color:#856404}
+.verdict-btn.v-unverifiable{border-color:#555;background:#eee;color:#555}
+.report-actions { display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1.1rem; }
+
+/* MINI QUIZ */
+.mini-quiz-wrap { margin-bottom:2rem; }
+
+/* READING CARDS */
+.reading-card { display:block; background:var(--card-bg); border:1px solid var(--border); border-top:3px solid var(--ink); padding:1rem 1.1rem; text-decoration:none; color:inherit; transition:all 0.18s; }
+.reading-card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.09); border-color:#b0a898; }
+.reading-source { font-family:'Space Mono',monospace; font-size:0.48rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+.reading-title { font-family:'Playfair Display',serif; font-size:0.92rem; font-weight:700; line-height:1.35; margin-bottom:0.35rem; color:var(--ink); }
+.reading-desc { font-size:0.76rem; line-height:1.6; color:#3a3530; margin-bottom:0.5rem; }
+.reading-tag { font-family:'Space Mono',monospace; font-size:0.48rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:2px 6px; background:var(--paper); border:1px solid var(--border); display:inline-block; }
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  :root{--sidebar-w:0px}
+  #sidebar{transform:translateX(-260px);width:260px}
+  #sidebar.open{transform:translateX(0)}
+  #sidebarToggle{display:flex;align-items:center;justify-content:center}
+  #main{margin-left:0}
+  .home-hero,.home-intro,.stats-row,.topic-grid,.content-wrap,.page-header{padding-left:1.2rem;padding-right:1.2rem}
+  .stats-row{grid-template-columns:1fr;margin:0 1.2rem 2rem}
+  .topic-grid{padding:0 1.2rem 2rem}
+  .matching-grid{grid-template-columns:1fr}
+  .verdict-grid{grid-template-columns:1fr 1fr}
+  .pillars{grid-template-columns:1fr}
+  .acc-body{padding-left:0.8rem}
+  #page-glossary [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;padding:1.2rem!important}
+}
+
+@media print {
+  #sidebar, #sidebarToggle, #lightbox, #glossaryDrawer, #t2GlossaryDrawer, #glossaryOverlay { display:none!important; }
+  #main { margin-left:0!important; }
+  .page { display:none!important; }
+  #page-factcheck { display:block!important; }
+  .page-header { background:white!important; color:black!important; padding:1rem!important; }
+  .page-header h1, .page-header h1 em { color:black!important; }
+  .page-header .sub, .back-btn { display:none!important; }
+  .report-form { border:1px solid #ccc; }
+  .fc-tool-grid, .fc-steps, .claim-card { page-break-inside:avoid; }
+  .btn-primary, .btn-secondary, .report-actions { display:none!important; }
+  body::before { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- GLOSSARY OVERLAY (mobile backdrop) -->
+<div id="glossaryOverlay" onclick="toggleGlossaryDrawer()"></div>
+
+
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-logo" onclick="showPage('home')">
+    <h2>The <span>Media</span><br>&amp; Society</h2>
+    <p>Interactive Learning Resource</p>
+  </div>
+
+  <div class="sb-section">Overview</div>
+  <div class="nav-item active" id="nav-home" onclick="showPage('home')">Home</div>
+
+  <hr class="sb-divider">
+  <div class="sb-section">Topics</div>
+  <div class="nav-item" id="nav-landscape" onclick="showPage('landscape')">The Changing Media Landscape</div>
+  <div class="nav-item" id="nav-impact" onclick="showPage('impact')">Impact on Individual &amp; Society</div>
+
+  <hr class="sb-divider">
+  <div class="sb-section">Practice</div>
+  <div class="nav-item" id="nav-quiz" onclick="showPage('quiz')">Knowledge Quiz</div>
+  <div class="nav-item" id="nav-factcheck" onclick="showPage('factcheck')">Fact-Checking Lab</div>
+  <div class="nav-item" id="nav-reading" onclick="showPage('reading')">Further Reading</div>
+
+  <hr class="sb-divider">
+  <div class="sb-section">Reference</div>
+  <div class="nav-item" id="nav-glossary" onclick="showPage('glossary')">Key Terms Glossary</div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="eyebrow">Media · Society · Digital Age</div>
+    <h1>The Media &amp;<br><em>Its Role in Society</em></h1>
+    <p class="hero-sub">How do we receive information? Who controls the narrative? And how does media shape our understanding of the world — and of ourselves?</p>
+  </div>
+  <div class="home-intro">
+    <h2>Why Media Matters</h2>
+    <p>We live in an age of unprecedented media abundance. Every day, billions of people consume news, entertainment, and opinion through an ever-expanding range of platforms — from century-old newspapers to AI-generated video feeds. Media does not simply <strong>reflect</strong> the world; it actively <strong>shapes</strong> it.</p>
+    <p>The way stories are selected, framed, and distributed determines which voices are heard, which events are considered important, and how social and political issues are understood. Understanding how media works — its structures, its economics, its power — is one of the most important critical skills of the 21st century.</p>
+    <p>This resource explores two interconnected dimensions: first, how the <strong>media landscape itself has transformed</strong> in the digital age; and second, how this transformation has affected the <strong>individual and society</strong> — from access to information, to entertainment, to manipulation and disinformation.</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">5.5bn</div><div class="stat-label"><a href="https://www.itu.int/itu-d/reports/statistics/2024/11/10/ff24-internet-use/" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);">Internet users worldwide (ITU, 2024) ↗</a></div></div>
+    <div class="stat-item"><div class="stat-num">29%</div><div class="stat-label"><a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024/dnr-executive-summary" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);">Adults use social media as main news source (Reuters Institute, 2024) ↗</a></div></div>
+    <div class="stat-item"><div class="stat-num">265+</div><div class="stat-label"><a href="https://pressgazette.co.uk/news/uk-local-newspaper-closures-at-least-265-local-newspaper-titles-gone-since-2005-but-pace-of-decline-has-slowed/" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);">UK local papers closed since 2005 (Press Gazette, 2024) ↗</a></div></div>
+  </div>
+  <div style="padding:0 3rem 1rem;"><div class="section-label">Explore the Topics</div></div>
+  <div class="topic-grid">
+    <div class="topic-btn t1" onclick="showPage('landscape')">
+      <div class="tb-tag">Topic 1</div>
+      <div class="tb-title">The Changing Media Landscape</div>
+      <div class="tb-desc">From print to platforms — how traditional and digital media differ, and what that means for journalism, gatekeeping, and public discourse.</div>
+    </div>
+    <div class="topic-btn t2" onclick="showPage('impact')">
+      <div class="tb-tag">Topic 2</div>
+      <div class="tb-title">Impact on Individual &amp; Society</div>
+      <div class="tb-desc">Filter bubbles, echo chambers, fake news, propaganda — how media shapes our perception, identity, and political reality.</div>
+    </div>
+    <div class="topic-btn t3" onclick="showPage('quiz')">
+      <div class="tb-tag">Practice</div>
+      <div class="tb-title">Knowledge Quiz</div>
+      <div class="tb-desc">Test your understanding across all key concepts with matching, multiple choice, and true/false questions. Get personalised AI feedback.</div>
+    </div>
+    <div class="topic-btn t4" onclick="showPage('factcheck')">
+      <div class="tb-tag">Skills Lab</div>
+      <div class="tb-title">Fact-Checking Lab</div>
+      <div class="tb-desc">Learn to verify claims using professional tools like Snopes, Reuters Fact Check, and Google Reverse Image Search.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOPIC 1 -->
+<div class="page" id="page-landscape">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>The Changing<br><em>Media Landscape</em></h1>
+    <div class="sub">Topic 1 · Traditional &amp; Digital Media · Gatekeeping · Algorithms · New Professions</div>
+  </div>
+  <div class="content-wrap">
+
+    <div class="section-label">Explainer Video</div>
+    <div class="video-block">
+      <video controls><source src="The_Changing_Media_Landscape.mp4" type="video/mp4">Your browser does not support video.</video>
+      <div class="video-caption">▶ The Changing Media Landscape — Explainer Video</div>
+    </div>
+
+    <div class="section-label">Quick Check — Video Comprehension Quiz</div>
+    <div class="mini-quiz-wrap">
+      <div id="mqContainer"><div id="mqList"></div>
+        <div class="progress-wrap" style="margin-bottom:1rem;"><div class="progress-bar" id="mqBar"></div></div>
+      </div>
+      <div id="mqResults" style="display:none;">
+        <div class="score-display">
+          <div class="score-number" id="mqScore">—</div>
+          <div class="score-label">correct answers</div>
+          <div class="score-message" id="mqMsg"></div>
+        </div>
+        <div class="flex-center mt-2"><button class="btn-secondary" onclick="resetMQ()">Try Again</button></div>
+      </div>
+    </div>
+
+
+
+    <div class="section-label" style="margin-top:2rem;">Overview Mind Map <span style="font-weight:400;font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;color:var(--muted);font-size:0.78rem;">— <span style="color:var(--accent);">📖 Glossary</span> opens right</span></div>
+
+    <div style="position:relative;margin-bottom:2rem;">
+      <button id="glossaryToggleBtn" onclick="toggleGlossaryDrawer()" style="position:absolute;top:0;right:0;z-index:10;background:var(--ink);color:var(--highlight);border:none;font-family:'Space Mono',monospace;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1rem;cursor:pointer;">📖 Key Terms</button>
+      <div style="border:1px solid var(--border);background:var(--card-bg);padding:0.7rem;">
+        <img src="The Media - The Changing Media Landscape.png" alt="Mind Map: The Changing Media Landscape" style="width:100%;display:block;cursor:zoom-in;" onclick="openLightbox(this.src)">
+        <div class="video-caption" style="background:var(--ink);">Mind Map — The Changing Media Landscape</div>
+      </div>
+    </div>
+  </div><!-- end content-wrap -->
+</div><!-- end page-landscape -->
+
+<!-- ===== GLOSSARY DRAWER (Topic 1) ===== -->
+<div id="glossaryDrawer" style="position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--card-bg);border-left:2px solid var(--ink);z-index:300;display:flex;flex-direction:column;transition:right 0.35s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.15);">
+  <div style="background:var(--ink);color:var(--paper);padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--highlight);margin-bottom:0.2rem;">Topic 1</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;">Key Terms Glossary</div>
+    </div>
+    <button onclick="toggleGlossaryDrawer()" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.3rem;cursor:pointer;line-height:1;">✕</button>
+  </div>
+  <div style="overflow-y:auto;flex:1;">
+    <!-- ACCORDION — one term at a time -->
+    <div class="g-acc">
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Traditional Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Print (newspapers, magazines), radio, and television. Uses a <strong>one-to-many</strong> communication model — one broadcaster reaches a mass audience. Content is controlled by professional editorial gatekeepers with fixed publication cycles.</p><div class="g-ex">Examples: BBC (public broadcaster), The Guardian (broadsheet), The Sun (tabloid), radio stations.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Modern / Digital Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Social media platforms, streaming services, podcasts, and online news portals. Uses a <strong>many-to-many</strong> model — anyone can publish. Content is personalised by algorithms and available 24/7 with real-time updates.</p><div class="g-ex">Examples: TikTok, Instagram, YouTube, Netflix, Spotify, citizen journalism blogs.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">One-to-Many Model</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A single sender communicates to a <strong>passive mass audience</strong> with no real-time interaction — characteristic of traditional media like TV, radio, and print newspapers. The audience receives but cannot easily respond or publish.</p><div class="g-ex">BBC evening news, a printed newspaper edition, a radio broadcast.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Many-to-Many Model</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Multiple users communicate <strong>simultaneously</strong> — every user is both sender and receiver. This shift fundamentally changed media power dynamics, enabling participation, but also enabling misinformation to spread without editorial oversight.</p><div class="g-ex">Twitter/X discussions, TikTok comments, WhatsApp groups, Reddit threads.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Gatekeeping</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The editorial process by which traditional media decides <em>which</em> stories get published and <em>how</em> they are framed. Largely absent in digital media — anyone can publish instantly, creating both freedom and significant risk of unverified content.</p><div class="g-ex">A newspaper editor choosing front-page stories vs. a tweet going viral with no editorial review.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Broadsheet</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A quality newspaper that prioritises <strong>in-depth, long-form journalism</strong> on politics, economics, and culture. Typically targets an educated readership and maintains higher editorial standards than tabloids.</p><div class="g-ex">The Guardian, The Times, The Independent, The Daily Telegraph.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Tabloid</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A newspaper that prioritises <strong>entertainment, celebrity gossip, and sensationalism</strong> over investigative journalism. Uses emotional language, large headlines, and striking images. Often commercially very successful.</p><div class="g-ex">The Sun, Daily Mail, Daily Mirror — same society as broadsheets, radically different editorial priorities.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Public Broadcaster</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A media institution funded by <strong>public money (licence fees or state subsidy)</strong>, operating under a public service mandate. Expected to be politically independent, offer balanced coverage, and serve all segments of society.</p><div class="g-ex">BBC (UK), ARD/ZDF (Germany), ORF (Austria), ABC (Australia).</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Commercial Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Media funded by <strong>advertising revenue or subscriptions</strong> rather than public money. Must balance editorial integrity against commercial pressures — content decisions can be influenced by what attracts advertisers or maximises clicks.</p><div class="g-ex">Sky News, ITV, The Sun, most social media platforms and streaming services.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Algorithms &amp; Personalisation</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Digital platforms use <strong>automated ranking systems</strong> to curate content based on your past behaviour, likes, and watch time. The goal is to maximise engagement — but this creates a narrow, personalised information environment (→ Filter Bubble).</p><div class="g-ex">YouTube's autoplay; TikTok's "For You Page"; Facebook's News Feed — all driven by engagement algorithms.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">New Media Professions</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The digital shift created entirely new careers: <strong>Content Creator, Influencer, Social Media Manager, SEO Expert, Podcast Producer, Data Journalist</strong>. Traditional print journalism roles declined as advertising revenue migrated online.</p><div class="g-ex">A YouTuber with 2M subscribers has greater daily reach than many regional newspapers.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Decline of Print Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Print circulation has <strong>fallen sharply since the 2000s</strong> as advertising migrated online. Many regional newspapers have closed. This raises serious questions about the economic sustainability of quality journalism and its implications for democracy.</p><div class="g-ex">Over 250 UK local papers closed between 2005–2020. Many national papers now primarily digital.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Citizen Journalism</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Non-professionals reporting on events via <strong>smartphones and social media</strong> in real time, without formal training or editorial oversight. Democratises information but raises questions about accuracy, bias, and accountability.</p><div class="g-ex">Eyewitness smartphone videos on X (Twitter) often break major stories before TV crews arrive.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">UGC — User-Generated Content</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Any content created and shared by <strong>ordinary users</strong> rather than professional media organisations — videos, posts, comments, reviews, livestreams. The foundation of social media and a defining feature of modern media.</p><div class="g-ex">TikTok videos, Instagram Reels, Reddit posts, YouTube vlogs, Wikipedia articles.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Media Convergence</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The merging of previously separate media forms into <strong>integrated digital ecosystems</strong>. Traditional outlets now operate across print, web, video, podcast, and social media simultaneously. Audiences no longer distinguish sharply between "TV" and "online".</p><div class="g-ex">The Guardian: started as a print newspaper, now has a website, YouTube channel, podcast network, and app.</div></div>
+      </div>
+    </div><!-- end g-acc -->
+  </div><!-- end scroll -->
+</div><!-- end glossaryDrawer -->
+
+<!-- TOPIC 2 -->
+<div class="page" id="page-impact">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>Impact on Individual<br><em>&amp; Society</em></h1>
+    <div class="sub">Topic 2 · Filter Bubbles · Fake News · Manipulation · Press Freedom</div>
+  </div>
+  <div class="content-wrap">
+
+    <!-- VIDEO -->
+    <div class="section-label">Explainer Video</div>
+    <div class="video-block">
+      <video controls><source src="The Media - Impact on Individual and Society.mp4" type="video/mp4">Your browser does not support video.</video>
+      <div class="video-caption">▶ Media Impact on Individual &amp; Society — Explainer Video</div>
+    </div>
+
+    <!-- VIDEO QUIZ -->
+    <div class="section-label">Quick Check — Video Comprehension Quiz</div>
+    <div class="mini-quiz-wrap">
+      <div id="t2qContainer">
+        <div id="t2qList"></div>
+        <div class="progress-wrap" style="margin-bottom:1rem;"><div class="progress-bar" id="t2qBar"></div></div>
+      </div>
+      <div id="t2qResults" style="display:none;">
+        <div class="score-display">
+          <div class="score-number" id="t2qScore">—</div>
+          <div class="score-label">correct answers</div>
+          <div class="score-message" id="t2qMsg"></div>
+        </div>
+        <div class="flex-center mt-2"><button class="btn-secondary" onclick="resetT2Q()">Try Again</button></div>
+      </div>
+    </div>
+
+    <!-- MIND MAP IMAGE + GLOSSARY BUTTON -->
+    <div class="section-label">Overview Mind Map <span style="font-weight:400;font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0;color:var(--muted);font-size:0.78rem;">— <span style="color:var(--accent);">📖 Glossary</span> opens right</span></div>
+
+    <div style="position:relative;margin-bottom:2rem;">
+      <button id="t2GlossaryBtn" onclick="toggleT2Glossary()" style="position:absolute;top:0;right:0;z-index:10;background:var(--ink);color:var(--highlight);border:none;font-family:'Space Mono',monospace;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1rem;cursor:pointer;">📖 Key Terms</button>
+      <div style="border:1px solid var(--border);background:var(--card-bg);padding:0.7rem;">
+        <img src="The Media - Impact on Individual and Society.png" alt="Mind Map: Media Impact on Individual and Society" style="width:100%;display:block;cursor:zoom-in;" onclick="openLightbox(this.src)">
+        <div class="video-caption" style="background:var(--ink);">Mind Map — Media Impact on Individual &amp; Society</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== GLOSSARY DRAWER (Topic 2) ===== -->
+<div id="t2GlossaryDrawer" style="position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--card-bg);border-left:2px solid var(--ink);z-index:300;display:flex;flex-direction:column;transition:right 0.35s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.15);">
+  <div style="background:var(--ink);color:var(--paper);padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--highlight);margin-bottom:0.2rem;">Topic 2</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;">Key Terms Glossary</div>
+    </div>
+    <button onclick="toggleT2Glossary()" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.3rem;cursor:pointer;line-height:1;">✕</button>
+  </div>
+  <div style="overflow-y:auto;flex:1;">
+    <div class="g-acc">
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Filter Bubble</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Algorithms show you only content matching your existing interests — coined by <strong>Eli Pariser</strong> (2011). Your information universe shrinks without you noticing. Key risk: you stop encountering opposing perspectives entirely.</p><div class="g-ex">YouTube autoplay keeps reinforcing whatever you already watched. You never encounter the other side.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Echo Chamber</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>An environment where existing beliefs are reinforced by like-minded social interaction — <em>and</em> algorithmically. Leads to polarisation. Closely linked to filter bubbles but also operates socially.</p><div class="g-ex">A Facebook group where any dissenting opinion is immediately removed or attacked.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Disinformation vs. Misinformation</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p><strong>Disinformation</strong>: deliberately false, spread with intent to deceive. <strong>Misinformation</strong>: false content spread without knowing it is false. <strong>Intent</strong> is the key distinction for the exam.</p><div class="g-ex">A fabricated BBC-style headline = disinformation. Sharing a debunked health claim you believed = misinformation.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Deepfakes</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>AI-generated synthetic media showing real people saying or doing things they never did. Increasingly realistic and difficult to detect. Pose serious risks for election integrity and personal reputation.</p><div class="g-ex">A deepfake video of a politician "confessing" to corruption — circulated days before an election.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Framing</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The way language, image selection, and emphasis shape how we perceive a story. A core analytical concept for text analysis in the Abitur — the same event can be framed completely differently.</p><div class="g-ex">"Freedom fighter" vs. "terrorist" — same person, same actions, opposite frames and emotional responses.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Media Bias</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>One-sided or selective reporting — every outlet has some degree of bias based on ownership, audience, and ideology. Recognising bias is a core Abitur analytical skill.</p><div class="g-ex">The Sun vs. The Guardian on the same immigration policy — same facts, radically different framing and tone.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Microtargeting</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Using big data and psychological profiles to send <strong>personalised political messages</strong> to specific voter segments. Perfected by Cambridge Analytica using Facebook data in 2016.</p><div class="g-ex">Showing different Brexit messages to young urban voters vs. older rural voters based on their Facebook data.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Propaganda</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Deliberate political manipulation through emotional appeals, slogans, repetition, and selective information. Social media has made propaganda faster, cheaper, and harder to detect than ever before.</p><div class="g-ex">State-sponsored troll farms posting thousands of messages to simulate grassroots public opinion (astroturfing).</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Press Freedom</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The right to publish without government interference — a cornerstone of democracy. Under growing pressure from political interference, economic crisis in journalism, and platform dominance.</p><div class="g-ex">Reporters Without Borders: Finland #1, Germany #10, USA #55, Russia #164 (2024).</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Cyberbullying &amp; Hate Speech</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p><strong>Cyberbullying</strong>: repeated online harassment, often anonymous. <strong>Hate speech</strong>: communication that dehumanises people based on identity. Both raise urgent questions about platform responsibility and free speech limits.</p><div class="g-ex">Anonymous coordinated harassment campaigns driving journalists off social media entirely.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="page-quiz">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>Knowledge <em>Quiz</em></h1>
+    <div class="sub">Matching · Multiple Choice · True or False</div>
+  </div>
+  <div class="content-wrap">
+
+    <!-- PHASE INDICATOR -->
+    <div id="quizPhaseBar" style="display:flex;gap:0.4rem;margin-bottom:1.4rem;">
+      <div id="phaseBtn1" style="flex:1;padding:0.5rem;font-family:'Space Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;text-align:center;background:var(--ink);color:var(--highlight);border:2px solid var(--ink);">① Matching</div>
+      <div id="phaseBtn2" style="flex:1;padding:0.5rem;font-family:'Space Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;text-align:center;background:var(--paper);color:var(--muted);border:2px solid var(--border);">② Multiple Choice</div>
+      <div id="phaseBtn3" style="flex:1;padding:0.5rem;font-family:'Space Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;text-align:center;background:var(--paper);color:var(--muted);border:2px solid var(--border);">③ True or False</div>
+    </div>
+
+    <div class="progress-wrap" style="margin-bottom:1.4rem;"><div class="progress-bar" id="progressBar"></div></div>
+
+    <!-- PHASE 1: MATCHING -->
+    <div id="phase-matching">
+      <div class="section-label">Part 1 — Match the Terms</div>
+      <div id="matching-section"></div>
+      <div style="text-align:center;margin:1.5rem 0;">
+        <button class="btn-primary" onclick="finishMatching()">Continue to Multiple Choice →</button>
+      </div>
+    </div>
+
+    <!-- PHASE 2: MULTIPLE CHOICE (one at a time) -->
+    <div id="phase-mc" style="display:none;">
+      <div class="section-label">Part 2 — Multiple Choice</div>
+      <div id="mc-live-list"></div>
+      <div class="progress-wrap" style="margin:0.5rem 0 1rem;"><div class="progress-bar" id="mcLiveBar"></div></div>
+      <div id="mc-live-next" style="display:none;text-align:center;margin-top:1rem;">
+        <button class="btn-primary" id="mcNextBtn" onclick="nextMCLive()"></button>
+      </div>
+    </div>
+
+    <!-- PHASE 3: TRUE OR FALSE (one at a time) -->
+    <div id="phase-tf" style="display:none;">
+      <div class="section-label">Part 3 — True or False?</div>
+      <div id="tf-live-list"></div>
+      <div class="progress-wrap" style="margin:0.5rem 0 1rem;"><div class="progress-bar" id="tfLiveBar"></div></div>
+      <div id="tf-live-next" style="display:none;text-align:center;margin-top:1rem;">
+        <button class="btn-primary" id="tfNextBtn" onclick="nextTFLive()"></button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results-container" style="display:none;">
+      <div class="section-label">Your Result</div>
+      <div class="score-display"><div class="score-number" id="scoreNum">—</div><div class="score-label">points achieved</div><div class="score-message" id="scoreMsg"></div></div>
+      <div class="section-label">Topic Breakdown</div>
+      <div class="breakdown-grid" id="breakdownGrid"></div>
+      </div>
+      <div class="section-label">Topics to Revise</div>
+      <div id="repeatSection" style="background:var(--card-bg);border:1px solid var(--border);padding:1.1rem 1.4rem;margin-bottom:1.4rem;"><p style="font-size:0.82rem;color:var(--muted);">Loading…</p></div>
+      <div class="flex-center"><button class="btn-secondary" onclick="resetQuiz()">Retake Quiz</button></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FACT-CHECKING -->
+<div class="page" id="page-factcheck">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>Fact-Checking <em>Lab</em></h1>
+    <div class="sub">Phase 1: Tools · Phase 2: Method · Phase 3: Practice</div>
+  </div>
+  <div class="content-wrap">
+    <p style="font-size:0.88rem;line-height:1.8;margin-bottom:2rem;color:#3a3530;">Being able to critically verify information is one of the most important media literacy skills of the 21st century. Work through the tool overview and method guide, then investigate a claim using the report template.</p>
+
+    <div class="section-label">Phase 1 — Your Fact-Checking Toolkit</div>
+    <div class="fc-tool-grid">
+      <div class="fc-tool-card" style="border-top-color:var(--accent);"><div class="fc-tool-name">🕵️ <a href="https://www.snopes.com" target="_blank">Snopes.com ↗</a></div><div class="fc-tool-desc">World's most well-known fact-checking site. Specialises in viral rumours, urban legends, and social media hoaxes.</div><div class="fc-tool-best">Best for: viral claims, chain emails, conspiracy theories.</div></div>
+      <div class="fc-tool-card" style="border-top-color:var(--accent2);"><div class="fc-tool-name">🏛️ <a href="https://www.factcheck.org" target="_blank">FactCheck.org ↗</a></div><div class="fc-tool-desc">Run by the Annenberg Public Policy Center. Focuses on political claims — politicians' statements, election claims, and policy debates.</div><div class="fc-tool-best">Best for: political speeches, election claims, government statistics.</div></div>
+      <div class="fc-tool-card" style="border-top-color:#b07c00;"><div class="fc-tool-name">📰 <a href="https://www.reuters.com/fact-check" target="_blank">Reuters Fact Check ↗</a></div><div class="fc-tool-desc">Fact-checking by one of the world's most trusted wire agencies. Strong on international stories and health misinformation.</div><div class="fc-tool-best">Best for: breaking news claims, health/science, international events.</div></div>
+      <div class="fc-tool-card" style="border-top-color:#6b3c8b;"><div class="fc-tool-name">🖼️ <a href="https://images.google.com/?action=su" target="_blank">Google Reverse Image ↗</a></div><div class="fc-tool-desc">Upload any image to find where it first appeared online. Essential for detecting images used out of context.</div><div class="fc-tool-best">Best for: checking if a photo is from a different event, year, or country.</div></div>
+      <div class="fc-tool-card" style="border-top-color:#1a3c6b;"><div class="fc-tool-name">🔎 <a href="https://www.tineye.com" target="_blank">TinEye ↗</a></div><div class="fc-tool-desc">Specialist reverse image search tracking where an image has appeared across the web with a precise timeline.</div><div class="fc-tool-best">Best for: finding original image source and date, detecting manipulations.</div></div>
+      <div class="fc-tool-card" style="border-top-color:var(--accent2);"><div class="fc-tool-name">🇬🇧 <a href="https://fullfact.org" target="_blank">Full Fact (UK) ↗</a></div><div class="fc-tool-desc">UK's leading independent fact-checking organisation. Focuses on British politics, NHS, and media claims. Charity-funded.</div><div class="fc-tool-best">Best for: UK political claims, NHS statistics, British tabloid headlines.</div></div>
+    </div>
+
+    <div class="section-label">Phase 2 — Step-by-Step Method</div>
+    <div class="fc-steps">
+      <div class="fc-step"><div class="fc-step-num">1</div><div class="fc-step-content"><h4>Identify the Claim</h4><p>What exactly is being claimed? Who made it, when, and in what context? Separate facts from opinions before you begin researching.</p></div></div>
+      <div class="fc-step"><div class="fc-step-num">2</div><div class="fc-step-content"><h4>Check Fact-Checking Databases</h4><p>Has it already been verified or debunked?</p><div class="tool-links"><a class="tool-tag" href="https://snopes.com" target="_blank">Snopes</a><a class="tool-tag" href="https://factcheck.org" target="_blank">FactCheck.org</a><a class="tool-tag" href="https://reuters.com/fact-check" target="_blank">Reuters</a><a class="tool-tag" href="https://fullfact.org" target="_blank">Full Fact</a></div></div></div>
+      <div class="fc-step"><div class="fc-step-num">3</div><div class="fc-step-content"><h4>Trace the Original Source</h4><p>Follow citations back to the primary source. Reputable journalism cites verifiable sources. Be sceptical of anonymous or circular references.</p></div></div>
+      <div class="fc-step"><div class="fc-step-num">4</div><div class="fc-step-content"><h4>Verify Images &amp; Videos</h4><p>Images are frequently taken out of context. Use reverse image search to check when and where an image was first published.</p><div class="tool-links"><a class="tool-tag" href="https://images.google.com" target="_blank">Google Images</a><a class="tool-tag" href="https://tineye.com" target="_blank">TinEye</a></div></div></div>
+      <div class="fc-step"><div class="fc-step-num">5</div><div class="fc-step-content"><h4>Cross-Reference Reputable Outlets</h4><p>Are established, independent news organisations also reporting this? If only partisan outlets cover it, treat it with caution.</p></div></div>
+      <div class="fc-step"><div class="fc-step-num">6</div><div class="fc-step-content"><h4>Reach a Verdict</h4><p>Assign: <strong>True</strong>, <strong>False</strong>, <strong>Misleading</strong> (technically accurate but deceptive), or <strong>Unverifiable</strong>. Document your reasoning clearly.</p></div></div>
+    </div>
+
+    <div class="section-label">Phase 3 — Claims to Investigate</div>
+    <div style="margin-bottom:2rem;">
+      <div class="claim-card"><div class="claim-num">Claim 01 <span class="claim-difficulty diff-easy">Easy</span></div><div class="claim-text">"5G towers were deliberately set on fire across the UK because they spread COVID-19."</div><div class="claim-source">Viral on Facebook &amp; WhatsApp, Spring 2020</div></div>
+      <div class="claim-card" style="animation-delay:.05s;border-left-color:#b07c00"><div class="claim-num">Claim 02 <span class="claim-difficulty diff-easy">Easy</span></div><div class="claim-text">"A photograph shows migrants storming a border fence — proof of an 'invasion'."</div><div class="claim-source">Shared widely on X (Twitter), multiple years</div></div>
+      <div class="claim-card" style="animation-delay:.1s;border-left-color:var(--accent2)"><div class="claim-num">Claim 03 <span class="claim-difficulty diff-medium">Medium</span></div><div class="claim-text">"The BBC receives secret government funding and therefore cannot report objectively on UK politics."</div><div class="claim-source">Recurring claim in tabloid press and social media</div></div>
+      <div class="claim-card" style="animation-delay:.15s;border-left-color:#6b3c8b"><div class="claim-num">Claim 04 <span class="claim-difficulty diff-medium">Medium</span></div><div class="claim-text">"Social media algorithms are deliberately designed to make users angry to maximise engagement and profit."</div><div class="claim-source">Popularised by The Social Dilemma (Netflix, 2020)</div></div>
+      <div class="claim-card" style="animation-delay:.2s;border-left-color:#1a3c6b"><div class="claim-num">Claim 05 <span class="claim-difficulty diff-hard">Hard</span></div><div class="claim-text">"Cambridge Analytica's targeted advertising was the decisive factor in Donald Trump's 2016 election victory."</div><div class="claim-source">Widely cited in media coverage post-2018</div></div>
+      <div class="claim-card" style="animation-delay:.25s;border-left-color:var(--accent)"><div class="claim-num">Claim 06 <span class="claim-difficulty diff-hard">Hard</span></div><div class="claim-text">"Reading news online exposes you to more diverse viewpoints than watching traditional broadcast television."</div><div class="claim-source">Often assumed; central to filter bubble debate</div></div>
+    </div>
+
+    <div class="section-label">Fact-Check Report Template</div>
+    <div class="report-form">
+      <h3>My Fact-Check Report</h3>
+      <div class="report-field"><label class="report-label">Claim (paste here)</label><textarea class="report-textarea" id="fc-claim" placeholder="Paste the exact claim you are investigating…" style="min-height:50px;"></textarea></div>
+      <div class="report-field"><label class="report-label">Original Source / Platform</label><input class="report-input" id="fc-source" placeholder="e.g. Facebook post, viral tweet, tabloid headline…"></div>
+      <div class="report-field"><label class="report-label">Sources I Consulted</label><textarea class="report-textarea" id="fc-sources-used" placeholder="List the fact-checking tools and outlets you used…" style="min-height:50px;"></textarea></div>
+      <div class="report-field"><label class="report-label">Evidence Found</label><textarea class="report-textarea" id="fc-evidence" placeholder="Summarise key evidence — both supporting and contradicting the claim."></textarea></div>
+      <div class="report-field"><label class="report-label">Verdict</label>
+        <div class="verdict-grid">
+          <div class="verdict-btn" onclick="setVerdict(this,'true')">✓ True</div>
+          <div class="verdict-btn" onclick="setVerdict(this,'false')">✗ False</div>
+          <div class="verdict-btn" onclick="setVerdict(this,'misleading')">⚠ Misleading</div>
+          <div class="verdict-btn" onclick="setVerdict(this,'unverifiable')">? Unverifiable</div>
+        </div>
+      </div>
+      <div class="report-field"><label class="report-label">Conclusion (3–5 sentences)</label><textarea class="report-textarea" id="fc-conclusion" placeholder="Write your conclusion explaining your verdict with reference to specific evidence."></textarea></div>
+      <div class="report-field"><label class="report-label">Media Literacy Reflection</label><textarea class="report-textarea" id="fc-reflection" placeholder="Why does this type of misinformation spread? Connect to filter bubble, echo chamber, or media bias." style="min-height:75px;"></textarea></div>
+      <div class="report-actions">
+        <button class="btn-secondary" onclick="clearReport()">Clear</button>
+        <button class="btn-secondary" onclick="window.print()">🖨 Print / PDF</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FURTHER READING -->
+<div class="page" id="page-reading">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>Further <em>Reading</em></h1>
+    <div class="sub">Curated Articles · BBC · The Guardian · Reuters · TED · UK Parliament · Gov.uk</div>
+  </div>
+  <div class="content-wrap">
+    <p style="font-size:0.88rem;line-height:1.8;margin-bottom:2rem;color:#3a3530;">These are carefully selected articles and resources from reliable, high-quality sources — all at C1 level and directly relevant to the Abitur topics. Use them to deepen your understanding, gather examples for essays, or prepare for text analysis tasks. <span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);">All links open in a new tab ↗</span></p>
+
+    <!-- FAKE NEWS -->
+    <div class="section-label">🤥 Fake News &amp; Disinformation</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://www.bbc.co.uk/news/av/uk-44552425" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent);">
+        <div class="reading-source">BBC News</div>
+        <div class="reading-title">Reality Check: How to spot fake news</div>
+        <div class="reading-desc">A practical BBC guide to identifying disinformation — ideal for Fact-Checking Lab preparation.</div>
+        <div class="reading-tag">Beginner · Practical</div>
+      </a>
+      <a href="https://www.theguardian.com/media/2016/dec/18/what-is-fake-news-pizzagate" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent);">
+        <div class="reading-source">The Guardian</div>
+        <div class="reading-title">What is fake news? The Pizzagate case explained</div>
+        <div class="reading-desc">The Guardian's account of how the Pizzagate disinformation campaign spread and caused real-world violence.</div>
+        <div class="reading-tag">Case Study · Medium</div>
+      </a>
+      <a href="https://fullfact.org/about/fake-news/" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent);">
+        <div class="reading-source">Full Fact (UK)</div>
+        <div class="reading-title">What do we mean by fake news?</div>
+        <div class="reading-desc">UK's leading fact-checking charity explains the terminology: fake news, disinformation, misinformation — and why the distinction matters.</div>
+        <div class="reading-tag">Definitions · C1</div>
+      </a>
+    </div>
+
+    <!-- DEEPFAKES -->
+    <div class="section-label">🤖 Deepfakes &amp; AI-Generated Media</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://www.theguardian.com/technology/2023/jan/13/the-rise-of-deepfakes-how-worried-should-we-be" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#6b1a6b;">
+        <div class="reading-source">The Guardian</div>
+        <div class="reading-title">The rise of deepfakes — how worried should we be?</div>
+        <div class="reading-desc">An accessible overview of deepfake technology, its political dangers, and what detection looks like in 2023.</div>
+        <div class="reading-tag">Overview · C1</div>
+      </a>
+      <a href="https://www.gov.uk/government/publications/deepfakes-and-media-literacy/deepfakes-and-media-literacy" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#6b1a6b;">
+        <div class="reading-source">UK Government (2024)</div>
+        <div class="reading-title">Deepfakes and Media Literacy — Official Report</div>
+        <div class="reading-desc">A 2024 UK government report on the risks of deepfakes and the role of media literacy. Excellent for citing in analytical essays.</div>
+        <div class="reading-tag">Official Source · Advanced</div>
+      </a>
+      <a href="https://www.nytimes.com/interactive/2020/11/21/science/artificial-intelligence-fake-people-faces.html" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#6b1a6b;">
+        <div class="reading-source">New York Times (Interactive)</div>
+        <div class="reading-title">Can you tell which faces are AI-generated?</div>
+        <div class="reading-desc">An interactive NYT quiz showing real vs. AI-generated faces — a powerful practical demonstration of the deepfake challenge.</div>
+        <div class="reading-tag">Interactive · Try It</div>
+      </a>
+    </div>
+
+    <!-- FILTER BUBBLE -->
+    <div class="section-label">🫧 Filter Bubbles &amp; Echo Chambers</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#1a3c6b;">
+        <div class="reading-source">TED Talk — Eli Pariser (9 min)</div>
+        <div class="reading-title">Beware online filter bubbles</div>
+        <div class="reading-desc">The original 2011 talk by the man who coined the term "filter bubble" — essential viewing, still completely relevant today.</div>
+        <div class="reading-tag">Video · Essential</div>
+      </a>
+      <a href="https://www.theguardian.com/technology/2017/may/22/social-media-election-facebook-filter-bubbles" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#1a3c6b;">
+        <div class="reading-source">The Guardian</div>
+        <div class="reading-title">How social media filter bubbles affect elections</div>
+        <div class="reading-desc">A detailed look at how algorithmic personalisation contributed to Brexit and the 2016 US election — with concrete examples.</div>
+        <div class="reading-tag">Analysis · C1</div>
+      </a>
+      <a href="https://commonslibrary.parliament.uk/research-briefings/cdp-2024-0003/" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#1a3c6b;">
+        <div class="reading-source">UK Parliament Library (2024)</div>
+        <div class="reading-title">Online Filter Bubbles and Misinformation</div>
+        <div class="reading-desc">A 2024 UK parliamentary research briefing — excellent primary source for advanced learners writing argumentative essays.</div>
+        <div class="reading-tag">Official · Advanced</div>
+      </a>
+    </div>
+
+    <!-- CAMBRIDGE ANALYTICA -->
+    <div class="section-label">🎯 Cambridge Analytica &amp; Political Manipulation</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#b07c00;">
+        <div class="reading-source">The Guardian</div>
+        <div class="reading-title">Revealed: 50 million Facebook profiles harvested</div>
+        <div class="reading-desc">The original Guardian investigation that broke the Cambridge Analytica story in 2018 — essential reading for the case study.</div>
+        <div class="reading-tag">Original Investigation · C1</div>
+      </a>
+      <a href="https://www.bbc.co.uk/news/technology-43465968" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#b07c00;">
+        <div class="reading-source">BBC News</div>
+        <div class="reading-title">Cambridge Analytica: The story so far</div>
+        <div class="reading-desc">A clear BBC explainer covering all key events — who, what, when, why — ideal for exam revision on the case study.</div>
+        <div class="reading-tag">Explainer · Revision</div>
+      </a>
+      <a href="https://www.ted.com/talks/carole_cadwalladr_facebook_s_role_in_brexit_and_the_threat_to_democracy" target="_blank" rel="noopener" class="reading-card" style="border-top-color:#b07c00;">
+        <div class="reading-source">TED Talk — Carole Cadwalladr (15 min)</div>
+        <div class="reading-title">Facebook's role in Brexit and the threat to democracy</div>
+        <div class="reading-desc">The Guardian journalist who broke Cambridge Analytica presents her evidence live at TED — gripping and directly exam-relevant.</div>
+        <div class="reading-tag">Video · Essential</div>
+      </a>
+    </div>
+
+    <!-- PRESS FREEDOM -->
+    <div class="section-label">🗞️ Press Freedom &amp; Local Journalism</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://rsf.org/en/index" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent2);">
+        <div class="reading-source">Reporters Without Borders</div>
+        <div class="reading-title">World Press Freedom Index 2024</div>
+        <div class="reading-desc">The definitive annual ranking of press freedom by country — use specific country data as evidence in analytical writing.</div>
+        <div class="reading-tag">Data Source · Essential</div>
+      </a>
+      <a href="https://pressgazette.co.uk/news/uk-local-newspaper-closures-at-least-265-local-newspaper-titles-gone-since-2005-but-pace-of-decline-has-slowed/" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent2);">
+        <div class="reading-source">Press Gazette</div>
+        <div class="reading-title">265+ UK local papers closed since 2005</div>
+        <div class="reading-desc">The source behind the statistic on the home page — detailed data on UK local newspaper closures and their democratic implications.</div>
+        <div class="reading-tag">Data · Exam Evidence</div>
+      </a>
+      <a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--accent2);">
+        <div class="reading-source">Reuters Institute, Oxford (2024)</div>
+        <div class="reading-title">Digital News Report 2024</div>
+        <div class="reading-desc">The most comprehensive global survey of how people consume news — the source behind the social media news statistic on the home page.</div>
+        <div class="reading-tag">Research · Advanced</div>
+      </a>
+    </div>
+
+    <!-- MEDIA LITERACY -->
+    <div class="section-label">🧠 Media Literacy &amp; Critical Thinking</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.65rem;margin-bottom:2rem;">
+      <a href="https://newslit.org/tips-tools/sift/" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--ink);">
+        <div class="reading-source">News Literacy Project (USA)</div>
+        <div class="reading-title">The SIFT Method: Stop, Investigate, Find, Trace</div>
+        <div class="reading-desc">A practical four-step framework for verifying online information — directly useful for the Fact-Checking Lab and media literacy analysis.</div>
+        <div class="reading-tag">Practical Framework · Essential</div>
+      </a>
+      <a href="https://www.itu.int/itu-d/reports/statistics/2024/11/10/ff24-internet-use/" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--ink);">
+        <div class="reading-source">ITU — UN Telecommunications Agency</div>
+        <div class="reading-title">Facts and Figures 2024: Internet Use</div>
+        <div class="reading-desc">Official UN data source for global internet user statistics — the primary source behind the 5.5 billion figure on the home page.</div>
+        <div class="reading-tag">Data Source · Official UN</div>
+      </a>
+      <a href="https://www.theguardian.com/media/2019/aug/05/how-to-spot-fake-news-guide" target="_blank" rel="noopener" class="reading-card" style="border-top-color:var(--ink);">
+        <div class="reading-source">The Guardian</div>
+        <div class="reading-title">A complete guide to spotting fake news</div>
+        <div class="reading-desc">A comprehensive, readable guide covering all key strategies for identifying disinformation — excellent for exam preparation.</div>
+        <div class="reading-tag">Guide · C1</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- GLOSSARY PAGE -->
+<div class="page" id="page-glossary">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back to Overview</button>
+    <h1>Key Terms <em>Glossary</em></h1>
+    <div class="sub">Topic 1 · Topic 2 · All Key Concepts</div>
+  </div>
+
+  <div style="padding:2rem 3rem 3rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 3rem;align-items:start;">
+
+    <!-- TOPIC 1 -->
+    <div>
+      <div class="section-label" style="margin-bottom:1rem;">Topic 1 — The Changing Media Landscape</div>
+      <div class="g-acc">
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Traditional Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Print (newspapers, magazines), radio, and television. Uses a <strong>one-to-many</strong> communication model — one broadcaster reaches a mass audience. Content is controlled by professional editorial gatekeepers with fixed publication cycles.</p><div class="g-ex">Examples: BBC (public broadcaster), The Guardian (broadsheet), The Sun (tabloid), radio stations.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Modern / Digital Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Social media platforms, streaming services, podcasts, and online news portals. Uses a <strong>many-to-many</strong> model — anyone can publish. Content is personalised by algorithms and available 24/7 with real-time updates.</p><div class="g-ex">Examples: TikTok, Instagram, YouTube, Netflix, Spotify, citizen journalism blogs.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">One-to-Many Model</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A single sender communicates to a <strong>passive mass audience</strong> with no real-time interaction — characteristic of traditional media like TV, radio, and print newspapers. The audience receives but cannot easily respond or publish.</p><div class="g-ex">BBC evening news, a printed newspaper edition, a radio broadcast.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Many-to-Many Model</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Multiple users communicate <strong>simultaneously</strong> — every user is both sender and receiver. This shift fundamentally changed media power dynamics, enabling participation, but also enabling misinformation to spread without editorial oversight.</p><div class="g-ex">Twitter/X discussions, TikTok comments, WhatsApp groups, Reddit threads.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Gatekeeping</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The editorial process by which traditional media decides <em>which</em> stories get published and <em>how</em> they are framed. Largely absent in digital media — anyone can publish instantly, creating both freedom and significant risk of unverified content.</p><div class="g-ex">A newspaper editor choosing front-page stories vs. a tweet going viral with no editorial review.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Broadsheet</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A quality newspaper that prioritises <strong>in-depth, long-form journalism</strong> on politics, economics, and culture. Typically targets an educated readership and maintains higher editorial standards than tabloids.</p><div class="g-ex">The Guardian, The Times, The Independent, The Daily Telegraph.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Tabloid</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A newspaper that prioritises <strong>entertainment, celebrity gossip, and sensationalism</strong> over investigative journalism. Uses emotional language, large headlines, and striking images. Often commercially very successful.</p><div class="g-ex">The Sun, Daily Mail, Daily Mirror — same society as broadsheets, radically different editorial priorities.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Public Broadcaster</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>A media institution funded by <strong>public money (licence fees or state subsidy)</strong>, operating under a public service mandate. Expected to be politically independent, offer balanced coverage, and serve all segments of society.</p><div class="g-ex">BBC (UK), ARD/ZDF (Germany), ORF (Austria), ABC (Australia).</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Commercial Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Media funded by <strong>advertising revenue or subscriptions</strong> rather than public money. Must balance editorial integrity against commercial pressures — content decisions can be influenced by what attracts advertisers or maximises clicks.</p><div class="g-ex">Sky News, ITV, The Sun, most social media platforms and streaming services.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Algorithms &amp; Personalisation</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Digital platforms use <strong>automated ranking systems</strong> to curate content based on your past behaviour, likes, and watch time. The goal is to maximise engagement — but this creates a narrow, personalised information environment (→ Filter Bubble).</p><div class="g-ex">YouTube's autoplay; TikTok's "For You Page"; Facebook's News Feed — all driven by engagement algorithms.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">New Media Professions</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The digital shift created entirely new careers: <strong>Content Creator, Influencer, Social Media Manager, SEO Expert, Podcast Producer, Data Journalist</strong>. Traditional print journalism roles declined as advertising revenue migrated online.</p><div class="g-ex">A YouTuber with 2M subscribers has greater daily reach than many regional newspapers.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Decline of Print Media</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Print circulation has <strong>fallen sharply since the 2000s</strong> as advertising migrated online. Many regional newspapers have closed. This raises serious questions about the economic sustainability of quality journalism and its implications for democracy.</p><div class="g-ex">Over 250 UK local papers closed between 2005–2020. Many national papers now primarily digital.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Citizen Journalism</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Non-professionals reporting on events via <strong>smartphones and social media</strong> in real time, without formal training or editorial oversight. Democratises information but raises questions about accuracy, bias, and accountability.</p><div class="g-ex">Eyewitness smartphone videos on X (Twitter) often break major stories before TV crews arrive.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">UGC — User-Generated Content</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Any content created and shared by <strong>ordinary users</strong> rather than professional media organisations — videos, posts, comments, reviews, livestreams. The foundation of social media and a defining feature of modern media.</p><div class="g-ex">TikTok videos, Instagram Reels, Reddit posts, YouTube vlogs, Wikipedia articles.</div></div>
+      </div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Media Convergence</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The merging of previously separate media forms into <strong>integrated digital ecosystems</strong>. Traditional outlets now operate across print, web, video, podcast, and social media simultaneously. Audiences no longer distinguish sharply between "TV" and "online".</p><div class="g-ex">The Guardian: started as a print newspaper, now has a website, YouTube channel, podcast network, and app.</div></div>
+      </div>
+    </div><!-- end g-acc -->
+
+    <div class="section-label" style="margin-top:2rem;">
+    </div>
+
+    <!-- TOPIC 2 -->
+    <div>
+      <div class="section-label" style="margin-bottom:1rem;">Topic 2 — Impact on Individual &amp; Society</div>
+      <div class="g-acc">
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Filter Bubble</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Algorithms show you only content matching your existing interests — coined by <strong>Eli Pariser</strong> (2011). Your information universe shrinks without you noticing. Key risk: you stop encountering opposing perspectives entirely.</p><div class="g-ex">YouTube autoplay keeps reinforcing whatever you already watched. You never encounter the other side.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Echo Chamber</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>An environment where existing beliefs are reinforced by like-minded social interaction — <em>and</em> algorithmically. Leads to polarisation. Closely linked to filter bubbles but also operates socially.</p><div class="g-ex">A Facebook group where any dissenting opinion is immediately removed or attacked.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Disinformation vs. Misinformation</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p><strong>Disinformation</strong>: deliberately false, spread with intent to deceive. <strong>Misinformation</strong>: false content spread without knowing it is false. <strong>Intent</strong> is the key distinction for the exam.</p><div class="g-ex">A fabricated BBC-style headline = disinformation. Sharing a debunked health claim you believed = misinformation.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Deepfakes</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>AI-generated synthetic media showing real people saying or doing things they never did. Increasingly realistic and difficult to detect. Pose serious risks for election integrity and personal reputation.</p><div class="g-ex">A deepfake video of a politician "confessing" to corruption — circulated days before an election.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Framing</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The way language, image selection, and emphasis shape how we perceive a story. A core analytical concept for text analysis in the Abitur — the same event can be framed completely differently.</p><div class="g-ex">"Freedom fighter" vs. "terrorist" — same person, same actions, opposite frames and emotional responses.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Media Bias</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>One-sided or selective reporting — every outlet has some degree of bias based on ownership, audience, and ideology. Recognising bias is a core Abitur analytical skill.</p><div class="g-ex">The Sun vs. The Guardian on the same immigration policy — same facts, radically different framing and tone.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Microtargeting</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Using big data and psychological profiles to send <strong>personalised political messages</strong> to specific voter segments. Perfected by Cambridge Analytica using Facebook data in 2016.</p><div class="g-ex">Showing different Brexit messages to young urban voters vs. older rural voters based on their Facebook data.</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Propaganda</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>Deliberate political manipulation through emotional appeals, slogans, repetition, and selective information. Social media has made propaganda faster, cheaper, and harder to detect than ever before.</p><div class="g-ex">State-sponsored troll farms posting thousands of messages to simulate grassroots public opinion (astroturfing).</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Press Freedom</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p>The right to publish without government interference — a cornerstone of democracy. Under growing pressure from political interference, economic crisis in journalism, and platform dominance.</p><div class="g-ex">Reporters Without Borders: Finland #1, Germany #10, USA #55, Russia #164 (2024).</div></div>
+      <div class="g-item">
+        <div class="g-header" onclick="toggleG(this)"><span class="g-term">Cyberbullying &amp; Hate Speech</span><span class="g-arrow">▸</span></div>
+        <div class="g-body"><p><strong>Cyberbullying</strong>: repeated online harassment, often anonymous. <strong>Hate speech</strong>: communication that dehumanises people based on identity. Both raise urgent questions about platform responsibility and free speech limits.</p><div class="g-ex">Anonymous coordinated harassment campaigns driving journalists off social media entirely.</div></div>
+    </div>
+
+  </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- end #main -->
+
+<script>
+
+// ===== NAVIGATION =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const nav=document.getElementById('nav-'+id);
+  if(nav) nav.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
+}
+
+// ===== LIGHTBOX =====
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// ===== ACCORDION =====
+function toggleAcc(h){const item=h.parentElement;const open=item.classList.contains('open');item.parentElement.querySelectorAll('.acc-item.open').forEach(el=>el.classList.remove('open'));if(!open)item.classList.add('open');}
+
+// ===== VIDEO T2 =====
+function embedT2(){let u=document.getElementById('t2url').value.trim();if(!u)return;if(u.includes('watch?v='))u=u.replace('watch?v=','embed/').split('&')[0];document.getElementById('t2videoWrap').innerHTML=`<iframe src="${u}" style="width:100%;height:360px;border:none;" allowfullscreen></iframe>`;}
+
+// ===== MINI QUIZ =====
+const mq=[
+  {
+    q:"Traditional media uses a _______ communication model, where one broadcaster reaches a passive audience.",
+    opts:["a many-to-many communication model, where every user can send and receive simultaneously",
+          "a one-to-many communication model, where one sender transmits to a large passive audience",
+          "a peer-to-peer communication model, where individuals exchange content directly with each other",
+          "a many-to-one communication model, where audiences send feedback to a central broadcaster"],
+    c:1,
+    exp:"✓ Correct! Traditional media uses a one-to-many model — a single broadcaster (TV, radio, newspaper) reaches a large, passive audience with no real-time interaction."
+  },
+  {
+    q:"According to the video, which combination correctly describes a hallmark of MODERN digital media?",
+    opts:["Fixed publication schedules and strict editorial gatekeeping by trained professional journalists",
+          "One-way communication from a central broadcaster to a passive mass audience worldwide",
+          "User-Generated Content, citizen journalism, and a 24/7 interactive news cycle",
+          "Centralised control of content by public broadcasters funded by government licence fees"],
+    c:2,
+    exp:"✓ Correct! The video lists UGC, citizen journalism, and a 24/7 news cycle as hallmarks of modern media — in direct contrast to the fixed schedules and gatekeeping of traditional media."
+  },
+  {
+    q:"In the video, 'gatekeeping' is illustrated by a locked gate and broadcasting tower. What does this concept refer to?",
+    opts:["The process by which social media algorithms decide which content users see in their feeds",
+          "The editorial process deciding which stories get published and how they are framed",
+          "The legal restrictions that prevent journalists from reporting on government secrets",
+          "The technical barriers that prevent citizens from accessing foreign news websites online"],
+    c:1,
+    exp:"✓ Correct! Gatekeeping is the editorial control over which stories are published — a defining feature of traditional media that is largely absent in digital, user-driven platforms."
+  },
+  {
+    q:"What does the abbreviation 'UGC' stand for, as used in the video's 'Hallmarks of Modern Media' slide?",
+    opts:["Unified Global Content — a standardised international system for distributing professional news",
+          "Universal Graphics Channel — a platform for sharing video and visual media on the internet",
+          "User-Generated Content — content created and shared by ordinary people, not professionals",
+          "Updated Government Communication — official information released by state media institutions"],
+    c:2,
+    exp:"✓ Correct! UGC stands for User-Generated Content. The video lists it as a key hallmark of modern media, reflecting the shift from professional to participatory content creation."
+  },
+  {
+    q:"The video defines a 'Filter Bubble' as an algorithmically-created universe of information that…",
+    opts:["exposes users to a wide range of opposing viewpoints to encourage balanced and critical thinking",
+          "is managed by professional editors who curate reliable content to protect users from misinformation",
+          "caters to your personal interests and past behaviour, gradually isolating you from other perspectives",
+          "is created by governments to control what citizens can access on social media and news platforms"],
+    c:2,
+    exp:"✓ Correct! The video defines the Filter Bubble as 'an algorithmically-created universe of information that caters to your interests, isolating you' — a major risk of personalised digital media."
+  },
+  {
+    q:"The video presents the digital media age as 'a double-edged sword'. What does this metaphor mean in context?",
+    opts:["Digital media is only useful for entertainment purposes, not for serious journalism or public debate",
+          "Digital media offers significant benefits such as access and participation, but also serious risks like misinformation",
+          "Digital media is a tool exclusively used by governments and corporations to control public opinion",
+          "Digital media has replaced all traditional media formats, making print and broadcast journalism obsolete"],
+    c:1,
+    exp:"✓ Correct! The video uses 'double-edged sword' to convey that digital media brings both opportunities (access, citizen voice, UGC) and dangers (fake news, filter bubbles, echo chambers)."
+  },
+  {
+    q:"The video shows an 'Echo Chamber' slide. Which definition best matches what is presented?",
+    opts:["A sound studio used by broadcasters to improve the audio quality of radio and podcast recordings",
+          "A government censorship system that amplifies approved political messages across state media channels",
+          "A space where existing beliefs are reinforced through repetition and like-minded interaction, causing polarisation",
+          "A digital platform that deliberately exposes users to contradictory information to challenge their opinions"],
+    c:2,
+    exp:"✓ Correct! The video defines an Echo Chamber as 'a space where existing beliefs are reinforced by repetition, leading to societal polarisation' — closely linked to filter bubbles and algorithms."
+  },
+  {
+    q:"According to the video, what role do 'Citizen Journalists' play in the modern media landscape?",
+    opts:["They are trained professionals employed by broadsheet newspapers to report on international affairs",
+          "They are government-appointed media monitors who verify the accuracy of user-generated online content",
+          "They are ordinary people who report on and share news events via social media without formal training",
+          "They are social media influencers who are paid by commercial platforms to create sponsored news content"],
+    c:2,
+    exp:"✓ Correct! The video lists Citizen Journalism as a hallmark of modern media — ordinary people reporting events in real time via social media, without formal journalistic training or editorial oversight."
+  },
+  {
+    q:"The video introduces Chapter 2 as 'The Digital Disruption — The user takes control.' What shift does this describe?",
+    opts:["Traditional broadcasters used digital technology to tighten their editorial control over news distribution",
+          "Governments introduced digital regulation to restrict the influence of commercial social media platforms",
+          "The internet enabled ordinary users to create, publish, and share content without needing gatekeepers",
+          "News agencies replaced print newspapers with online portals managed by teams of professional journalists"],
+    c:2,
+    exp:"✓ Correct! The digital disruption transferred power from professional gatekeepers to ordinary users — anyone can now publish, share, and broadcast, fundamentally changing the media landscape."
+  },
+  {
+    q:"The video's comparison table shows that traditional media relies on 'fixed schedules', while modern media features…",
+    opts:["strict editorial review cycles with weekly publication dates set by newspaper publishers in advance",
+          "a 24/7 instant news cycle driven by algorithms, social media, and real-time user-generated updates",
+          "monthly content plans approved by broadcasting regulators before any material is publicly released",
+          "seasonal programming schedules determined by advertising revenue and audience viewing statistics"],
+    c:1,
+    exp:"✓ Correct! The video's comparison table explicitly contrasts traditional media's fixed schedules with modern media's 24/7 instant news cycle — driven by algorithms and real-time UGC."
+  },
+];
+
+// ===== ONE-AT-A-TIME QUIZ ENGINE =====
+let mqCurrent=0, mqScore=0, mqAnswered=false, mqFinished=false;
+
+function buildMQ(){
+  mqCurrent=0; mqScore=0; mqAnswered=false; mqFinished=false;
+  renderMQQuestion();
+}
+
+function renderMQQuestion(){
+  const l=['A','B','C','D'];
+  const q=mq[mqCurrent];
+  const pct=Math.round((mqCurrent/mq.length)*100);
+  document.getElementById('mqBar').style.width=pct+'%';
+  document.getElementById('mqList').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);">QUESTION ${mqCurrent+1} OF ${mq.length}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--muted);">SCORE: ${mqScore}/${mqCurrent}</span>
+    </div>
+    <div class="question-card" style="animation:fadeUp 0.3s ease both;">
+      <span class="q-type-badge">Video Check</span>
+      <div class="question-text" style="padding-top:0.2rem;">${q.q}</div>
+      <div class="mc-options" id="mqOpts">
+        ${q.opts.map((o,oi)=>`
+          <div class="mc-option" id="mqo${oi}" onclick="answerMQ(${oi})" style="align-items:flex-start;padding:0.6rem 0.85rem;">
+            <span class="opt-letter" style="margin-top:0.1rem;flex-shrink:0;">${l[oi]}</span>
+            <span style="line-height:1.5;">${o}</span>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="mqFeedback"></div>
+    </div>
+    <div id="mqNextWrap" style="display:none;text-align:center;margin-top:1rem;">
+      <button class="btn-primary" onclick="nextMQ()" id="mqNextBtn"></button>
+    </div>`;
+}
+
+function answerMQ(oi){
+  if(mqAnswered) return;
+  mqAnswered=true;
+  const q=mq[mqCurrent];
+  const correct=oi===q.c;
+  if(correct) mqScore++;
+  const opts=document.getElementById('mqOpts');
+  opts.querySelectorAll('.mc-option').forEach(el=>el.onclick=null);
+  document.getElementById(`mqo${oi}`).classList.add(correct?'correct':'wrong');
+  if(!correct) document.getElementById(`mqo${q.c}`).classList.add('revealed-correct');
+  const fb=document.getElementById('mqFeedback');
+  fb.className=`feedback ${correct?'correct':'wrong'}`;
+  fb.style.display='block';
+  fb.textContent=correct ? q.exp : `✗ Not quite. ${q.exp}`;
+  // show next/finish button
+  const nw=document.getElementById('mqNextWrap');
+  nw.style.display='block';
+  const nb=document.getElementById('mqNextBtn');
+  nb.textContent=mqCurrent<mq.length-1 ? 'Next Question →' : 'See Results ✦';
+}
+
+function nextMQ(){
+  if(mqCurrent<mq.length-1){
+    mqCurrent++;
+    mqAnswered=false;
+    renderMQQuestion();
+    // scroll to top of quiz
+    document.getElementById('mqList').scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    showMQResults();
+  }
+}
+
+function showMQResults(){
+  document.getElementById('mqBar').style.width='100%';
+  document.getElementById('mqContainer').style.display='none';
+  document.getElementById('mqResults').style.display='block';
+  const p=Math.round(mqScore/mq.length*100);
+  document.getElementById('mqScore').textContent=`${mqScore}/${mq.length}`;
+  document.getElementById('mqMsg').textContent=
+    p>=90?'Outstanding — excellent grasp of the video content!':
+    p>=70?'Well done — strong understanding of Topic 1.':
+    p>=50?'Good effort — review the glossary for weaker areas.':
+    'Worth revisiting the video and glossary before moving on.';
+}
+
+function submitMQ(){ /* legacy — no longer used in one-at-a-time mode */ }
+
+function resetMQ(){
+  document.getElementById('mqContainer').style.display='block';
+  document.getElementById('mqResults').style.display='none';
+  buildMQ();
+}
+
+// ===== MAIN QUIZ =====
+const pairs=[
+  {term:"Filter Bubble",def:"Algorithms only show content matching past behaviour — your information universe shrinks unnoticed (Eli Pariser, 2011)."},
+  {term:"Echo Chamber",def:"Existing beliefs are amplified because you mainly encounter like-minded people — leads to societal polarisation."},
+  {term:"Framing",def:"Language and presentation shape perception of an event — e.g. 'freedom fighter' vs. 'terrorist'."},
+  {term:"Citizen Journalism",def:"Non-professional individuals report on events in real time via social media, without editorial oversight."},
+  {term:"Deepfake",def:"AI-generated video or audio depicting real people saying or doing things they never did."},
+  {term:"Gatekeeping",def:"Editorial control deciding which stories get published and how — characteristic of traditional media."},
+  {term:"Microtargeting",def:"Using personal data and psychological profiles to send tailored political messages to specific voter groups."},
+  {term:"Media Convergence",def:"Traditional outlets adopting digital platforms — one organisation distributing across print, web, podcast and video simultaneously."},
+];
+
+const mcQ=[
+  {q:"Which communication model is characteristic of traditional media such as television and print newspapers?",opts:["Many-to-many","Peer-to-peer","One-to-many","Many-to-one"],c:2,topic:"landscape",exp:"Traditional media uses a one-to-many model — one broadcaster reaches a large, passive audience with no real-time interaction."},
+  {q:"What does 'UGC' stand for in a media context?",opts:["Universal Global Content","User-Generated Content","Unified Graphics Channel","Updated Government Communication"],c:1,topic:"landscape",exp:"UGC (User-Generated Content) is content created and shared by ordinary users — the foundation of social media platforms."},
+  {q:"What is a 'broadsheet' in the context of print media?",opts:["An online news portal","A quality newspaper focused on in-depth journalism","An advertising-free magazine","A state-run broadcaster"],c:1,topic:"landscape",exp:"Broadsheets (e.g. The Guardian, The Times) prioritise in-depth journalism and target educated readers — unlike tabloids."},
+  {q:"Over 250 UK local newspapers closed between 2005 and 2020. What was the main economic cause?",opts:["Rising printing costs","Advertising revenue migrating to online platforms","Government censorship laws","Declining interest in local news"],c:1,topic:"landscape",exp:"As audiences moved online, advertising revenue collapsed — the core economic cause of widespread local newsroom closures."},
+  {q:"Which term describes the process by which traditional outlets now operate across print, web, podcast, and video simultaneously?",opts:["Media Bias","Gatekeeping","Media Convergence","Clickbait"],c:2,topic:"landscape",exp:"Media Convergence: traditional outlets adopted digital formats so that one organisation now distributes across multiple platforms."},
+  {q:"Which term describes the deliberate political manipulation of public opinion through repetition, emotional appeals, and slogans?",opts:["Media Bias","Framing","Propaganda","Spin Doctoring"],c:2,topic:"manipulation",exp:"Propaganda is the systematic, deliberate shaping of public opinion for political purposes — amplified massively by social media."},
+  {q:"Approximately how many Facebook users had their data harvested by Cambridge Analytica without consent?",opts:["12 million","87 million","250 million","3 million"],c:1,topic:"manipulation",exp:"Cambridge Analytica harvested approximately 87 million Facebook profiles to build psychological voter profiles for microtargeting."},
+  {q:"Which term describes one-sided or selective reporting shaped by a media outlet's ownership or ideology?",opts:["Fake News","Media Bias","Clickbait","Infotainment"],c:1,topic:"manipulation",exp:"Media Bias is tendentious, one-sided coverage — a key concept for critical text analysis in the Abitur."},
+  {q:"What is the key distinction between 'disinformation' and 'misinformation'?",opts:["Disinformation is online only; misinformation appears in print","Disinformation is intentionally false; misinformation is false but spread without intent to deceive","Disinformation uses images; misinformation uses text only","There is no meaningful distinction between the two terms"],c:1,topic:"manipulation",exp:"Intent is the key: disinformation is deliberately false to deceive; misinformation is false content shared without knowing it is false."},
+  {q:"Which term describes users becoming trapped in an information environment reinforcing only their existing beliefs?",opts:["Astroturfing","Parasocial relationship","Filter Bubble","Cancel Culture"],c:2,topic:"manipulation",exp:"The Filter Bubble (Eli Pariser, 2011): algorithms personalise content until users are isolated from opposing viewpoints."},
+  {q:"Which function is associated with 'infotainment'?",opts:["Pure factual reporting","A blend of information and entertainment","Deliberate disinformation","State media censorship"],c:1,topic:"entertainment",exp:"Infotainment blends information and entertainment — a defining feature of modern TV formats and algorithmically-driven online media."},
+  {q:"Press freedom is ranked annually by which organisation?",opts:["UNESCO","Reporters Without Borders","Amnesty International","The United Nations"],c:1,topic:"information",exp:"Reporters Without Borders publishes the annual World Press Freedom Index — a key data source for exam responses on press freedom."},
+];
+
+const tfQ=[
+  {q:"The BBC is an example of a public broadcaster funded by licence fees.",a:true,topic:"landscape",exp:"Correct. The BBC is licence-fee-funded and politically independent — unlike commercial media funded by advertising."},
+  {q:"The term 'Filter Bubble' was coined by Mark Zuckerberg.",a:false,topic:"manipulation",exp:"False. 'Filter Bubble' was coined in 2011 by internet activist and author Eli Pariser — not by Zuckerberg."},
+  {q:"Traditional media mainly communicates using a 'many-to-many' model.",a:false,topic:"landscape",exp:"False. Traditional media uses a one-to-many model. The many-to-many model is characteristic of social media platforms."},
+  {q:"Freedom of the press is considered a fundamental democratic principle.",a:true,topic:"information",exp:"Correct. Press freedom is a cornerstone of liberal democracy — enabling citizens and journalists to hold power to account."},
+  {q:"Fake news refers exclusively to content that is accidentally false.",a:false,topic:"manipulation",exp:"False. Fake news is typically deliberately false disinformation — intent to deceive is its defining feature."},
+  {q:"Cambridge Analytica used Facebook data to send personalised political advertising to specific voter groups.",a:true,topic:"manipulation",exp:"Correct. This microtargeting used psychological profiles built from 87 million Facebook users' data in 2016."},
+  {q:"An echo chamber is created exclusively by social media algorithms.",a:false,topic:"manipulation",exp:"False. Echo chambers operate both algorithmically AND socially — through like-minded communities that exclude dissenting voices."},
+  {q:"The decline of local print newspapers creates regions with no independent coverage of local government.",a:true,topic:"landscape",exp:"Correct. These 'news deserts' are a serious democratic concern as local accountability journalism disappears entirely."},
+  {q:"Deepfakes can currently be detected with 100% accuracy using widely available tools.",a:false,topic:"manipulation",exp:"False. Deepfake detection remains an unsolved challenge — AI-generated content is increasingly indistinguishable from real footage."},
+  {q:"Citizen journalists must meet the same editorial standards as professional journalists before publishing.",a:false,topic:"landscape",exp:"False. Citizen journalists have no formal training or editorial oversight — this brings both speed benefits and accuracy risks."},
+];
+
+// ===== QUIZ STATE =====
+let mState={sel:null,matched:{}}, mScore=0;
+let mcLiveCurrent=0, mcLiveScore=0, mcLiveAnswered=false, mcLiveResults={};
+let tfLiveCurrent=0, tfLiveScore=0, tfLiveAnswered=false, tfLiveResults={};
+let qResult=null;
+
+function setPhase(n){
+  [1,2,3].forEach(i=>{
+    const b=document.getElementById('phaseBtn'+i);
+    if(!b)return;
+    if(i<n){b.style.background='#1a6b3c';b.style.color='white';b.style.borderColor='#1a6b3c';}
+    else if(i===n){b.style.background='var(--ink)';b.style.color='var(--highlight)';b.style.borderColor='var(--ink)';}
+    else{b.style.background='var(--paper)';b.style.color='var(--muted)';b.style.borderColor='var(--border)';}
+  });
+}
+
+function upProg(){
+  const matchDone=Object.keys(mState.matched).length;
+  const mcDone=mcLiveCurrent+(mcLiveAnswered?1:0);
+  const tfDone=tfLiveCurrent+(tfLiveAnswered?1:0);
+  const tot=pairs.length+mcQ.length+tfQ.length;
+  const done=Math.min(matchDone,pairs.length)+Math.min(mcDone,mcQ.length)+Math.min(tfDone,tfQ.length);
+  document.getElementById('progressBar').style.width=Math.min(100,done/tot*100)+'%';
+}
+
+// ===== PHASE 1: MATCHING =====
+function buildMatching(){
+  const sh=[...pairs].sort(()=>Math.random()-0.5);
+  document.getElementById('matching-section').innerHTML=`
+    <div class="question-card">
+      <span class="q-number">Part 1 of 3</span><span class="q-type-badge">Matching</span>
+      <div class="question-text">Match each key term with the correct definition. Click a term, then click the matching definition.</div>
+      <div class="matching-grid">
+        <div><div class="matching-col-label">Term</div>${pairs.map((p,i)=>`<div class="term-item" id="t${i}" onclick="selTerm(${i})">${p.term}</div>`).join('')}</div>
+        <div><div class="matching-col-label">Definition</div>${sh.map(p=>{const oi=pairs.findIndex(x=>x.term===p.term);return`<div class="def-item" id="d${oi}" onclick="selDef(${oi})">${p.def}</div>`;}).join('')}</div>
+      </div>
+      <div id="matchStatus" style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);margin-top:0.8rem;text-align:center;">0 / ${pairs.length} matched</div>
+    </div>`;
+}
+
+function selTerm(i){
+  if(mState.matched[i]!==undefined)return;
+  document.querySelectorAll('.term-item').forEach(e=>e.classList.remove('selected'));
+  mState.sel=i;
+  document.getElementById(`t${i}`).classList.add('selected');
+  document.querySelectorAll('.def-item').forEach(e=>{
+    if(!e.classList.contains('matched-correct')&&!e.classList.contains('matched-wrong'))e.classList.add('highlight');
+  });
+}
+
+function selDef(di){
+  if(mState.sel===null)return;
+  const ti=mState.sel;
+  if(mState.matched[ti]!==undefined)return;
+  const ok=ti===di;
+  mState.matched[ti]=ok;
+  if(ok)mScore++;
+  document.getElementById(`t${ti}`).classList.remove('selected');
+  document.getElementById(`t${ti}`).classList.add(ok?'matched-correct':'matched-wrong');
+  document.getElementById(`d${di}`).classList.remove('highlight');
+  document.getElementById(`d${di}`).classList.add(ok?'matched-correct':'matched-wrong');
+  document.querySelectorAll('.def-item').forEach(e=>e.classList.remove('highlight'));
+  mState.sel=null;
+  const n=Object.keys(mState.matched).length;
+  document.getElementById('matchStatus').textContent=`${n} / ${pairs.length} matched`;
+  upProg();
+}
+
+function finishMatching(){
+  pairs.forEach((_,i)=>{
+    if(mState.matched[i]===undefined){
+      document.getElementById(`t${i}`).classList.add('matched-wrong');
+      document.getElementById(`d${i}`).classList.add('matched-wrong');
+      mState.matched[i]=false;
+    }
+  });
+  const correct=Object.values(mState.matched).filter(v=>v===true).length;
+  const total=pairs.length;
+  const pct=Math.round(correct/total*100);
+  const status=document.getElementById('matchStatus');
+  if(status){
+    status.innerHTML=`<span style="color:${pct>=75?'var(--accent2)':'var(--accent)'};font-size:0.7rem;font-weight:700;">${correct}/${total} correct (${pct}%)</span> — ${pct>=75?'Well done!':'Review the incorrect pairs above.'}`;
+  }
+  setTimeout(()=>{
+    document.getElementById('phase-matching').style.display='none';
+    document.getElementById('phase-mc').style.display='block';
+    setPhase(2);
+    renderMCLive();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }, 1200);
+}
+
+// ===== PHASE 2: MC ONE AT A TIME =====
+function renderMCLive(){
+  const L=['A','B','C','D'];
+  const q=(mcQShuffled.length?mcQShuffled:mcQ)[mcLiveCurrent];
+  const pct=Math.round((mcLiveCurrent/mcQ.length)*100);
+  document.getElementById('mcLiveBar').style.width=pct+'%';
+  document.getElementById('mc-live-list').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);">QUESTION ${mcLiveCurrent+1} OF ${mcQ.length}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);">SCORE: ${mcLiveScore}/${mcLiveCurrent}</span>
+    </div>
+    <div class="question-card" style="animation:fadeUp 0.3s ease both;">
+      <span class="q-type-badge">MC</span>
+      <div class="question-text" style="padding-top:0.2rem;">${q.q}</div>
+      <div class="mc-options" id="mcLiveOpts">
+        ${q.opts.map((o,oi)=>`
+          <div class="mc-option" id="mclo${oi}" onclick="answerMCLive(${oi})" style="align-items:flex-start;padding:0.6rem 0.85rem;">
+            <span class="opt-letter" style="margin-top:0.1rem;flex-shrink:0;">${L[oi]}</span>
+            <span style="line-height:1.5;">${o}</span>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="mcLiveFb"></div>
+    </div>`;
+  document.getElementById('mc-live-next').style.display='none';
+  mcLiveAnswered=false;
+}
+
+function answerMCLive(oi){
+  if(mcLiveAnswered)return;
+  mcLiveAnswered=true;
+  const q=(mcQShuffled.length?mcQShuffled:mcQ)[mcLiveCurrent];
+  const ok=oi===q.c;
+  if(ok)mcLiveScore++;
+  mcLiveResults[mcLiveCurrent]={ok,topic:(mcQShuffled.length?mcQShuffled:mcQ)[mcLiveCurrent].topic};
+  document.getElementById('mcLiveOpts').querySelectorAll('.mc-option').forEach(e=>e.onclick=null);
+  document.getElementById(`mclo${oi}`).classList.add(ok?'correct':'wrong');
+  if(!ok)document.getElementById(`mclo${q.c}`).classList.add('revealed-correct');
+  const fb=document.getElementById('mcLiveFb');
+  fb.className=`feedback ${ok?'correct':'wrong'}`;
+  fb.style.display='block';
+  fb.textContent=(ok?'✓ Correct! ':'✗ Not quite. ')+q.exp;
+  document.getElementById('mcNextBtn').textContent=mcLiveCurrent<mcQ.length-1?'Next Question →':'Continue to True / False →';
+  document.getElementById('mc-live-next').style.display='block';
+  upProg();
+}
+
+function nextMCLive(){
+  if(mcLiveCurrent<mcQ.length-1){
+    mcLiveCurrent++;
+    mcLiveAnswered=false;
+    renderMCLive();
+    document.getElementById('mc-live-list').scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    document.getElementById('phase-mc').style.display='none';
+    document.getElementById('phase-tf').style.display='block';
+    setPhase(3);
+    renderTFLive();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+// ===== PHASE 3: T/F ONE AT A TIME =====
+function renderTFLive(){
+  const q=(tfQShuffled.length?tfQShuffled:tfQ)[tfLiveCurrent];
+  const pct=Math.round((tfLiveCurrent/tfQ.length)*100);
+  document.getElementById('tfLiveBar').style.width=pct+'%';
+  document.getElementById('tf-live-list').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);">STATEMENT ${tfLiveCurrent+1} OF ${tfQ.length}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);">SCORE: ${tfLiveScore}/${tfLiveCurrent}</span>
+    </div>
+    <div class="question-card" style="animation:fadeUp 0.3s ease both;">
+      <span class="q-type-badge">T / F</span>
+      <div class="question-text" style="padding-top:0.2rem;">${q.q}</div>
+      <div class="tf-options">
+        <button class="tf-btn" id="tflt" onclick="answerTFLive(true)">✓ True</button>
+        <button class="tf-btn" id="tflf" onclick="answerTFLive(false)">✗ False</button>
+      </div>
+      <div class="feedback" id="tfLiveFb"></div>
+    </div>`;
+  document.getElementById('tf-live-next').style.display='none';
+  tfLiveAnswered=false;
+}
+
+function answerTFLive(v){
+  if(tfLiveAnswered)return;
+  tfLiveAnswered=true;
+  const q=(tfQShuffled.length?tfQShuffled:tfQ)[tfLiveCurrent];
+  const ok=v===q.a;
+  if(ok)tfLiveScore++;
+  tfLiveResults[tfLiveCurrent]={ok,topic:(tfQShuffled.length?tfQShuffled:tfQ)[tfLiveCurrent].topic};
+  document.getElementById('tflt').onclick=null;
+  document.getElementById('tflf').onclick=null;
+  document.getElementById(v?'tflt':'tflf').classList.add(ok?'correct':'wrong');
+  if(!ok)document.getElementById(q.a?'tflt':'tflf').classList.add('revealed-correct');
+  const fb=document.getElementById('tfLiveFb');
+  fb.className=`feedback ${ok?'correct':'wrong'}`;
+  fb.style.display='block';
+  fb.textContent=(ok?'✓ Correct! ':'✗ Not quite. ')+q.exp;
+  document.getElementById('tfNextBtn').textContent=tfLiveCurrent<tfQ.length-1?'Next Statement →':'See Results ✦';
+  document.getElementById('tf-live-next').style.display='block';
+  upProg();
+}
+
+function nextTFLive(){
+  if(tfLiveCurrent<tfQ.length-1){
+    tfLiveCurrent++;
+    tfLiveAnswered=false;
+    renderTFLive();
+    document.getElementById('tf-live-list').scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    showResults();
+  }
+}
+
+// ===== RESULTS =====
+function showResults(){
+  document.getElementById('phase-tf').style.display='none';
+  document.getElementById('quizPhaseBar').style.display='none';
+  document.getElementById('progressBar').style.width='100%';
+  const ts={landscape:{g:0,t:0},manipulation:{g:0,t:0},information:{g:0,t:0},entertainment:{g:0,t:0}};
+  ts.landscape.t+=pairs.length; ts.landscape.g+=mScore;
+  Object.values(mcLiveResults).forEach(r=>{ts[r.topic].t++;if(r.ok)ts[r.topic].g++;});
+  Object.values(tfLiveResults).forEach(r=>{ts[r.topic].t++;if(r.ok)ts[r.topic].g++;});
+  const total=mScore+mcLiveScore+tfLiveScore;
+  const tot=pairs.length+mcQ.length+tfQ.length;
+  document.getElementById('results-container').style.display='block';
+  document.getElementById('scoreNum').textContent=`${total}/${tot}`;
+  const pct=Math.round(total/tot*100);
+  document.getElementById('scoreMsg').textContent=pct>=85?'Excellent — strong grasp of The Media!':pct>=65?'Solid result — a few areas still need attention.':pct>=40?'Room to improve — targeted revision will help.':'Some core concepts need further study.';
+  const tn={landscape:'Media Landscape',manipulation:'Manipulation',information:'Information',entertainment:'Entertainment'};
+  const tc={landscape:'#1a6b3c',manipulation:'#d4342a',information:'#b07c00',entertainment:'#1a3c6b'};
+  document.getElementById('breakdownGrid').innerHTML=Object.entries(ts).map(([k,v])=>{
+    if(!v.t)return'';
+    const p=Math.round(v.g/v.t*100);
+    return`<div class="breakdown-card"><div class="breakdown-topic">${tn[k]}</div><div class="breakdown-score" style="color:${tc[k]}">${v.g}/${v.t} <span style="font-size:0.7rem;color:var(--muted)">(${p}%)</span></div><div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${p}%;background:${tc[k]}"></div></div></div>`;
+  }).join('');
+  const weak=Object.entries(ts).filter(([k,v])=>v.t&&v.g/v.t<0.6).map(([k])=>tn[k]);
+  document.getElementById('repeatSection').innerHTML=weak.length===0
+    ?`<p style="font-size:0.87rem;"><strong>✓ All areas covered!</strong> Focus on structuring essays and comments confidently.</p>`
+    :`<p style="font-size:0.87rem;margin-bottom:0.6rem;">Revise these areas:</p><div class="repeat-topics">${weak.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+// Shuffled copies for random order
+let mcQShuffled=[], tfQShuffled=[];
+function shuffleArray(a){return [...a].sort(()=>Math.random()-0.5);}
+
+function resetQuiz(){
+  mState={sel:null,matched:{}}; mScore=0;
+  mcQShuffled=shuffleArray(mcQ);
+  tfQShuffled=shuffleArray(tfQ);
+  mcLiveCurrent=0; mcLiveScore=0; mcLiveAnswered=false; mcLiveResults={};
+  tfLiveCurrent=0; tfLiveScore=0; tfLiveAnswered=false; tfLiveResults={};
+  qResult=null;
+  document.getElementById('results-container').style.display='none';
+  document.getElementById('quizPhaseBar').style.display='flex';
+  document.getElementById('phase-matching').style.display='block';
+  document.getElementById('phase-mc').style.display='none';
+  document.getElementById('phase-tf').style.display='none';
+  document.getElementById('progressBar').style.width='0%';
+  setPhase(1);
+  buildMatching();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+// ===== FACT-CHECK =====
+let verdict='';
+function setVerdict(el,v){document.querySelectorAll('.verdict-btn').forEach(b=>b.classList.remove('selected','v-true','v-false','v-misleading','v-unverifiable'));el.classList.add('selected','v-'+v);verdict=v;}
+function clearReport(){['fc-claim','fc-source','fc-sources-used','fc-evidence','fc-conclusion','fc-reflection'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.querySelectorAll('.verdict-btn').forEach(b=>b.classList.remove('selected','v-true','v-false','v-misleading','v-unverifiable'));verdict='';}
+
+let t2GlossaryOpen = false;
+function toggleT2Glossary() {
+  t2GlossaryOpen = !t2GlossaryOpen;
+  document.getElementById('t2GlossaryDrawer').style.right = t2GlossaryOpen ? '0' : '-380px';
+  document.getElementById('t2GlossaryBtn').textContent = t2GlossaryOpen ? '✕ Close' : '📖 Key Terms';
+}
+
+let glossaryOpen = false;
+function toggleGlossaryDrawer() {
+  glossaryOpen = !glossaryOpen;
+  document.getElementById('glossaryDrawer').style.right = glossaryOpen ? '0' : '-380px';
+  document.getElementById('glossaryOverlay').classList.toggle('open', glossaryOpen);
+  const btn = document.getElementById('glossaryToggleBtn');
+  if (btn) btn.textContent = glossaryOpen ? '✕ Close' : '📖 Key Terms';
+}
+
+function toggleG(header) {
+  const item = header.parentElement;
+  const isOpen = item.classList.contains('open');
+  // close all others
+  item.parentElement.querySelectorAll('.g-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ===== MIND MAP POPUPS =====
+const mmData = {
+  traditional: {
+    tag: 'Traditional Media · One-to-Many Model',
+    title: 'Traditional Media',
+    color: '#1a3c6b',
+    body: `
+      <p><strong>Traditional media</strong> includes print (newspapers, magazines), radio, and television. It operates on a <strong>one-to-many communication model</strong> — a single broadcaster reaches a large, passive audience.</p>
+      <p><strong>Core characteristics (as shown in the mind map):</strong></p>
+      <ul style="margin:0.5rem 0 0.5rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li><strong>One-way communication</strong> — no real-time audience response</li>
+        <li><strong>Editorial Gatekeeping</strong> — trained journalists decide what gets published</li>
+        <li><strong>Fixed publication cycles</strong> — daily papers, scheduled broadcasts</li>
+        <li><strong>Professional journalism standards</strong> — editorial accountability</li>
+      </ul>
+      <p><strong>Print Media:</strong> Quality broadsheets (The Guardian), tabloids (The Sun), magazines, news agencies.</p>
+      <p><strong>Broadcasting:</strong> Public broadcasters (BBC) and commercial stations operate under regulatory frameworks.</p>
+      <div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#f0f4ff;border-left:3px solid #1a3c6b;font-size:0.78rem;color:#2a3560;">
+        <strong>Key contrast:</strong> Traditional media acts as a filter — not everything reaches the public. This gatekeeping can ensure quality, but also limits whose voices are heard.
+      </div>`
+  },
+  modern: {
+    tag: 'Modern & Digital Media · Many-to-Many Model',
+    title: 'Modern & Digital Media',
+    color: '#1a6b3c',
+    body: `
+      <p><strong>Modern digital media</strong> operates on a <strong>many-to-many communication model</strong> — a decentralised ecosystem where any user can be both consumer and creator.</p>
+      <p><strong>Key platforms & formats:</strong></p>
+      <ul style="margin:0.5rem 0 0.5rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li>Social media: Instagram, TikTok, YouTube, Facebook, X (Twitter)</li>
+        <li>Streaming: Netflix, Spotify, podcasts</li>
+        <li>Online news portals and blogs</li>
+      </ul>
+      <p><strong>New actors:</strong> User-generated content, citizen journalism, influencers & content creators have disrupted professional media.</p>
+      <p><strong>Characteristics of the Digital Age:</strong></p>
+      <ul style="margin:0.5rem 0 0.5rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li><strong>Interactivity & bidirectional communication</strong></li>
+        <li><strong>24/7 news cycle</strong> — no fixed publication times</li>
+        <li><strong>Personalised algorithms</strong> — content tailored to each individual user</li>
+      </ul>
+      <div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#f0fff4;border-left:3px solid #1a6b3c;font-size:0.78rem;color:#1a3c20;">
+        <strong>Key contrast:</strong> Modern media removes gatekeeping — everyone can publish, instantly and globally. This democratises information but enables fake news and misinformation to spread unchecked.
+      </div>`
+  },
+  developments: {
+    tag: 'Central Developments',
+    title: 'Central Developments',
+    color: '#b07c00',
+    body: `
+      <p>Three central structural shifts have defined the media landscape transformation:</p>
+      <p><strong>1. Decline in Print Circulation & Ad Revenue</strong><br>
+      As audiences moved online, print advertising revenue collapsed. Over 250 UK local newspapers closed between 2005–2020. Quality journalism faces an existential economic crisis.</p>
+      <p><strong>2. Media Convergence</strong><br>
+      Old outlets have adopted online versions to survive — newspapers now have websites, apps, YouTube channels, and podcasts. Traditional and digital media boundaries have blurred. One organisation now distributes across multiple platforms.</p>
+      <p><strong>3. Evolution of the Professional World</strong><br>
+      Entirely new professions emerged:</p>
+      <ul style="margin:0.3rem 0 0.3rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li><strong>Social Media Managers</strong> — manage brand presence on platforms</li>
+        <li><strong>SEO Experts</strong> — optimise content for search engines</li>
+        <li><strong>Professional Content Creators</strong> — YouTubers, podcasters, TikTokers</li>
+      </ul>
+      <div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#fffbf0;border-left:3px solid #b07c00;font-size:0.78rem;color:#5a3e00;">
+        <strong>Exam tip:</strong> "Media convergence" and "decline of print" are frequently examined concepts — know both the causes and consequences for democracy and journalism quality.
+      </div>`
+  },
+  literacy: {
+    tag: 'Media Literacy',
+    title: 'Media Literacy',
+    color: '#6b1a6b',
+    body: `
+      <p><strong>Media literacy</strong> is the ability to critically access, analyse, evaluate, and create media. It is the most important skill for navigating the digital media landscape.</p>
+      <p><strong>Core Values & Principles:</strong></p>
+      <ul style="margin:0.3rem 0 0.3rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li>Freedom of the press as a <strong>fundamental democratic principle</strong></li>
+        <li>Global access to news, knowledge, and events as a civic right</li>
+      </ul>
+      <p><strong>Verification & Fact-Checking:</strong></p>
+      <ul style="margin:0.3rem 0 0.3rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li>Distinguishing <strong>news</strong> (objective information) from <strong>opinion</strong> (subjective commentary)</li>
+        <li>Fact-checking sources before sharing content</li>
+      </ul>
+      <p><strong>Critical Analytical Strategies:</strong></p>
+      <ul style="margin:0.3rem 0 0.3rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li><em>Who is speaking?</em> — evaluating source credibility</li>
+        <li><em>With what intention?</em> — assessing purpose and bias</li>
+        <li><em>For whom?</em> — identifying target audience</li>
+        <li>Recognising persuasive language and digital reliability signals</li>
+      </ul>
+      <div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#faf0ff;border-left:3px solid #6b1a6b;font-size:0.78rem;color:#3a005a;">
+        <strong>Exam connection:</strong> These analytical strategies apply directly to non-fictional text analysis tasks — "Who is speaking, with what intention, for whom?" is a core analytical framework.
+      </div>`
+  },
+  center: {
+    tag: 'Central Concept',
+    title: 'The Changing Media Landscape',
+    color: '#d4342a',
+    body: `
+      <p>The media landscape has undergone its most profound transformation in history — driven by digitalisation, the internet, and mobile technology.</p>
+      <p>This mind map shows <strong>four interconnected dimensions</strong> of that change:</p>
+      <ul style="margin:0.5rem 0 0.5rem 1.2rem;font-size:0.83rem;line-height:1.8;color:#2a2520;">
+        <li>🔵 <strong>Traditional Media</strong> — how legacy media operated (one-to-many, gatekeeping)</li>
+        <li>🟢 <strong>Modern Digital Media</strong> — how new media works (many-to-many, algorithms)</li>
+        <li>🟡 <strong>Central Developments</strong> — structural changes (print decline, convergence)</li>
+        <li>🟣 <strong>Media Literacy</strong> — skills needed to navigate the new landscape</li>
+      </ul>
+      <p>Understanding these dimensions allows you to <strong>analyse media texts critically</strong>, recognise bias, evaluate sources, and write informed commentary on the role of media in society.</p>
+      <div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#fff5f5;border-left:3px solid #d4342a;font-size:0.78rem;color:#5a0000;">
+        <strong>Tip:</strong> Click on any highlighted area of the mind map to explore that section in detail. Use the 📖 Key Terms drawer for definitions of individual vocabulary items.
+      </div>`
+  }
+};
+
+function showMMPopup(key) {
+  const d = mmData[key];
+  document.getElementById('mmPopupTag').textContent = d.tag;
+  document.getElementById('mmPopupTitle').textContent = d.title;
+  document.getElementById('mmPopupHeader').style.borderBottom = `3px solid ${d.color}`;
+  document.getElementById('mmPopupBody').innerHTML = d.body;
+  const popup = document.getElementById('mmPopup');
+  popup.style.display = 'flex';
+  popup.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMMPopup(e) {
+  if (e && e.target !== document.getElementById('mmPopup')) return;
+  document.getElementById('mmPopup').style.display = 'none';
+  document.getElementById('mmPopup').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+
+// ===== TOPIC 2 MULTIPLE CHOICE QUIZ =====
+const t2q = [
+  {
+    q:"What is a 'Filter Bubble', and who coined the term?",
+    opts:["A government tool to censor harmful online content — coined by Mark Zuckerberg in 2009",
+          "An algorithmically personalised information universe that gradually isolates you from opposing views — coined by Eli Pariser in 2011",
+          "A social media feature that allows users to manually block content they find offensive — introduced by Twitter in 2014",
+          "A journalistic strategy of only covering stories relevant to a specific target audience — developed by The Guardian"],
+    c:1,
+    exp:"✓ Correct! The Filter Bubble was coined by Eli Pariser in 2011. It describes how personalisation algorithms narrow your information world until you only encounter content that confirms your existing views."
+  },
+  {
+    q:"What is the key difference between 'disinformation' and 'misinformation'?",
+    opts:["Disinformation is spread online; misinformation is spread through print media only",
+          "Disinformation is always political; misinformation only concerns health topics",
+          "Disinformation is deliberately false and intended to deceive; misinformation is false but spread without deliberate intent",
+          "There is no real difference — both terms describe the same phenomenon of fake news"],
+    c:2,
+    exp:"✓ Correct! Intent is the key distinction. Disinformation is spread with the deliberate goal of deceiving people. Misinformation is false content shared by someone who genuinely believed it was true."
+  },
+  {
+    q:"Cambridge Analytica harvested data from approximately how many Facebook users, and for what purpose?",
+    opts:["1 million users — to improve Facebook's advertising algorithm for commercial clients",
+          "20 million users — to conduct academic research into online voting behaviour patterns",
+          "87 million users — to build psychological profiles for microtargeted political advertising",
+          "500 million users — to sell personal data directly to foreign governments and corporations"],
+    c:2,
+    exp:"✓ Correct! Cambridge Analytica harvested 87 million Facebook profiles without consent. They built psychological profiles and used them to send personalised political ads to swing voters in the 2016 US election and Brexit referendum."
+  },
+  {
+    q:"Which statement best describes an 'Echo Chamber'?",
+    opts:["A broadcast studio designed to improve the sound quality of radio and podcast recordings",
+          "A government censorship system that amplifies approved political messages across state media",
+          "An environment — social and/or algorithmic — where existing beliefs are only ever reinforced by like-minded interaction, leading to polarisation",
+          "A digital platform feature that deliberately exposes users to contradictory information to challenge their opinions"],
+    c:2,
+    exp:"✓ Correct! An Echo Chamber is an environment where you interact mainly with like-minded people, so your existing beliefs are constantly reinforced and never challenged — leading to increasing polarisation."
+  },
+  {
+    q:"Why are deepfakes considered particularly dangerous in a democratic context?",
+    opts:["They are always created by professional studios and are very expensive to produce",
+          "They can realistically show real people saying or doing things they never did — and are increasingly difficult to detect",
+          "They are only used for entertainment purposes such as film parodies and comedy sketches",
+          "They are easy to identify because they always contain visible digital watermarks"],
+    c:1,
+    exp:"✓ Correct! Deepfakes are dangerous because advancing AI makes them increasingly realistic and hard to detect — a deepfake of a politician 'confessing' to corruption could go viral before any fact-check reaches the same audience."
+  },
+  {
+    q:"Which of the following best describes the concept of 'framing' in media?",
+    opts:["The physical layout and design of a newspaper page, including headlines and image placement",
+          "The editorial decision to publish a story within a specific time frame or news cycle",
+          "The way language, emphasis, and image selection shape the audience's perception of a story — the same event can look completely different depending on the frame",
+          "A legal framework that regulates how media organisations must present political content during elections"],
+    c:2,
+    exp:"✓ Correct! Framing is the way language and presentation shape perception. 'Freedom fighter' vs. 'terrorist' describes the same person with the same actions — but produces opposite emotional responses. Recognising framing is a core Abitur skill."
+  },
+  {
+    q:"What is 'microtargeting', as used by Cambridge Analytica?",
+    opts:["A journalism technique of focusing investigative reporting on small local communities",
+          "A social media algorithm that shows trending content to the largest possible audience",
+          "Sending different, psychologically tailored political messages to specific voter segments based on personal data profiles",
+          "A fact-checking method that targets and debunks specific viral misinformation stories"],
+    c:2,
+    exp:"✓ Correct! Microtargeting uses big data and psychological profiling to send personalised political messages to specific groups. Different voters see different ads designed to appeal to their particular fears, values, or beliefs."
+  },
+  {
+    q:"Press freedom is described as a cornerstone of democracy. Which combination of threats to press freedom is most accurate?",
+    opts:["Too many journalists, oversaturation of news content, and audiences reading too much news",
+          "Economic pressure (collapsing ad revenue), political interference, and dominance of unverified social media content over professional journalism",
+          "Competition from public broadcasters, strict libel laws, and an excess of investigative journalism",
+          "Rising newspaper subscription prices, journalists working from home, and declining interest in print"],
+    c:1,
+    exp:"✓ Correct! Press freedom faces three major threats today: economic crisis (ad revenue collapse causing newsroom closures), political pressure and intimidation of journalists, and the dominance of unverified social media content that undermines trust in quality journalism."
+  }
+];
+
+let t2qCurrent=0, t2qScore=0, t2qAnswered=false;
+
+function buildT2Q(){
+  t2qCurrent=0; t2qScore=0; t2qAnswered=false;
+  document.getElementById('t2qContainer').style.display='block';
+  document.getElementById('t2qResults').style.display='none';
+  renderT2Q();
+}
+
+function renderT2Q(){
+  const l=['A','B','C','D'];
+  const q=t2q[t2qCurrent];
+  const pct=Math.round((t2qCurrent/t2q.length)*100);
+  document.getElementById('t2qBar').style.width=pct+'%';
+  document.getElementById('t2qList').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);">QUESTION ${t2qCurrent+1} OF ${t2q.length}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--muted);">SCORE: ${t2qScore}/${t2qCurrent}</span>
+    </div>
+    <div class="question-card" style="animation:fadeUp 0.3s ease both;">
+      <span class="q-type-badge">Multiple Choice</span>
+      <div class="question-text" style="padding-top:0.2rem;">${q.q}</div>
+      <div class="mc-options" id="t2qOpts">
+        ${q.opts.map((o,oi)=>`
+          <div class="mc-option" id="t2qo${oi}" onclick="answerT2Q(${oi})" style="align-items:flex-start;padding:0.6rem 0.85rem;">
+            <span class="opt-letter" style="margin-top:0.1rem;flex-shrink:0;">${l[oi]}</span>
+            <span style="line-height:1.5;">${o}</span>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="t2qFeedback"></div>
+    </div>
+    <div id="t2qNextWrap" style="display:none;text-align:center;margin-top:1rem;">
+      <button class="btn-primary" onclick="nextT2Q()" id="t2qNextBtn"></button>
+    </div>`;
+}
+
+function answerT2Q(oi){
+  if(t2qAnswered) return;
+  t2qAnswered=true;
+  const q=t2q[t2qCurrent];
+  const correct=oi===q.c;
+  if(correct) t2qScore++;
+  document.getElementById('t2qOpts').querySelectorAll('.mc-option').forEach(el=>el.onclick=null);
+  document.getElementById(`t2qo${oi}`).classList.add(correct?'correct':'wrong');
+  if(!correct) document.getElementById(`t2qo${q.c}`).classList.add('revealed-correct');
+  const fb=document.getElementById('t2qFeedback');
+  fb.className=`feedback ${correct?'correct':'wrong'}`;
+  fb.style.display='block';
+  fb.textContent=correct ? q.exp : `✗ Not quite. ${q.exp}`;
+  const nw=document.getElementById('t2qNextWrap');
+  nw.style.display='block';
+  document.getElementById('t2qNextBtn').textContent=t2qCurrent<t2q.length-1 ? 'Next Question →' : 'See Results ✦';
+}
+
+function nextT2Q(){
+  if(t2qCurrent<t2q.length-1){
+    t2qCurrent++; t2qAnswered=false; renderT2Q();
+    document.getElementById('t2qList').scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    document.getElementById('t2qContainer').style.display='none';
+    document.getElementById('t2qResults').style.display='block';
+    const pct=Math.round(t2qScore/t2q.length*100);
+    document.getElementById('t2qScore').textContent=`${t2qScore}/${t2q.length}`;
+    document.getElementById('t2qMsg').textContent=pct>=87?'Excellent — strong command of Topic 2!':pct>=62?'Good effort — review the explanations above.':'Review the key terms and try again.';
+    document.getElementById('t2qBar').style.width='100%';
+  }
+}
+
+function resetT2Q(){ buildT2Q(); }
+
+buildMQ();buildT2Q();mcQShuffled=shuffleArray(mcQ);tfQShuffled=shuffleArray(tfQ);buildMatching();setPhase(1);
+</script>
+
+
+<!-- FOOTER -->
+<footer id="site-footer" style="
+  position:fixed;
+  bottom:0;
+  left:var(--sidebar-w);
+  right:0;
+  font-family:'Space Mono',monospace;
+  background:#0f0e0e;
+  padding:0.8rem 3rem;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,0.08);
+  z-index:50;
+  box-sizing:border-box;
+">
+  <div style="display:flex;flex-direction:column;gap:0.2rem;">
+    <span style="font-size:0.48rem;letter-spacing:0.25em;text-transform:uppercase;color:#f0c040;">The Media &amp; Society</span>
+    <span style="font-size:0.78rem;color:rgba(255,255,255,0.85);letter-spacing:0.05em;">© 2026 Christin-Maria Leukert</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+    <div style="font-size:0.72rem;line-height:1.6;color:rgba(255,255,255,0.4);">
+      Explainer Videos &amp; Mind-Maps created with NotebookLM (Google) &nbsp;·&nbsp; Web design developed with Claude (Anthropic)
+    </div>
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;gap:0.4rem;text-decoration:none;color:rgba(255,255,255,0.4);font-size:0.72rem;white-space:nowrap;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 42" width="80" height="22" style="opacity:0.5;">
+        <rect width="150" height="42" rx="6" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <text x="8" y="26" font-family="monospace" font-size="14" fill="rgba(255,255,255,0.7)">CC</text>
+        <circle cx="46" cy="21" r="9" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+        <text x="42" y="25" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.6)">BY</text>
+        <circle cx="72" cy="21" r="9" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+        <text x="68" y="25" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.6)">NC</text>
+        <circle cx="98" cy="21" r="9" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+        <text x="94" y="25" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.6)">ND</text>
+      </svg>
+      <span>CC BY-NC-ND 4.0</span>
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>
