@@ -308,6 +308,7 @@ body::before { content:''; position:fixed; inset:0; background-image:repeating-l
   /* Drucke nur den Print-Inhalt */
   body > * { display:none!important; }
   #printOverlay { display:block!important; position:static!important; overflow:visible!important; width:100%!important; height:auto!important; z-index:auto!important; inset:auto!important; }
+  #printOverlay, #printOverlay * { break-inside:auto!important; page-break-inside:auto!important; }
 }
 </style>
 </head>
@@ -960,6 +961,11 @@ function clearReport() {
 }
 
 function printReport() {
+  // Escape user input to prevent HTML injection breaking the report
+  const escape = s => String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+
   // All fields with their labels
   const fields = [
     { id:'fc-claim',        label:'Claim' },
@@ -991,7 +997,7 @@ function printReport() {
 
   fields.forEach(f => {
     const el = document.getElementById(f.id);
-    const val = el ? el.value.trim() : '';
+    const val = el ? escape(el.value.trim()) : '';
     html += `
       <div style="margin-bottom:1.2rem;">
         <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a736a;margin-bottom:0.3rem;">${f.label}</div>
@@ -1012,12 +1018,12 @@ function printReport() {
   printDiv.innerHTML = html;
   document.body.appendChild(printDiv);
 
-  // Print then remove the overlay
-  window.print();
+  // Give the browser a full layout frame before printing so @media print rules are applied correctly
   window.addEventListener('afterprint', function handler() {
     document.body.removeChild(printDiv);
     window.removeEventListener('afterprint', handler);
   }, { once: true });
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
 }
 
 // ===== MIND MAP POPUP DATA =====
