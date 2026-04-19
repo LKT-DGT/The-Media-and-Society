@@ -305,10 +305,17 @@ body::before { content:''; position:fixed; inset:0; background-image:repeating-l
 
 /* FIX #12: Print — aktive Seite drucken, nicht immer factcheck */
 @media print {
-  /* Drucke nur den Print-Inhalt */
-  body > * { display:none!important; }
-  #printOverlay { display:block!important; position:static!important; overflow:visible!important; width:100%!important; height:auto!important; z-index:auto!important; inset:auto!important; }
-  #printOverlay, #printOverlay * { break-inside:auto!important; page-break-inside:auto!important; }
+  #sidebar, #sidebarToggle, #lightbox, #glossaryDrawer, #t2GlossaryDrawer, #glossaryOverlay, #mmPopup { display:none!important; }
+  #main { margin-left:0!important; }
+  .page { display:none!important; }
+  .page.active { display:block!important; }
+  .page-header { background:white!important; color:black!important; padding:1rem!important; }
+  .page-header h1, .page-header h1 em { color:black!important; }
+  .page-header .sub, .back-btn { display:none!important; }
+  .report-form { border:1px solid #ccc; }
+  .fc-tool-grid, .fc-steps, .claim-card { page-break-inside:avoid; }
+  .btn-primary, .btn-secondary, .report-actions { display:none!important; }
+  body::before { display:none; }
 }
 </style>
 </head>
@@ -614,7 +621,7 @@ body::before { content:''; position:fixed; inset:0; background-image:repeating-l
       <div class="report-field"><label class="report-label">Media Literacy Reflection</label><textarea class="report-textarea" id="fc-reflection" placeholder="Why does this type of misinformation spread? Connect to filter bubble, echo chamber, or media bias." style="min-height:75px;"></textarea></div>
       <div class="report-actions">
         <button class="btn-secondary" onclick="clearReport()">Clear</button>
-        <button class="btn-secondary" onclick="printReport()">🖨 Print / PDF</button>
+        <button class="btn-secondary" onclick="window.print()">🖨 Print / PDF</button>
       </div>
     </div>
   </div>
@@ -958,72 +965,6 @@ function clearReport() {
   });
   document.querySelectorAll('.verdict-btn').forEach(b => b.classList.remove('selected', 'v-true', 'v-false', 'v-misleading', 'v-unverifiable'));
   verdict = '';
-}
-
-function printReport() {
-  // Escape user input to prevent HTML injection breaking the report
-  const escape = s => String(s).replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[c]);
-
-  // All fields with their labels
-  const fields = [
-    { id:'fc-claim',        label:'Claim' },
-    { id:'fc-source',       label:'Original Source / Platform' },
-    { id:'fc-sources-used', label:'Sources Consulted' },
-    { id:'fc-evidence',     label:'Evidence Found' },
-    { id:'fc-conclusion',   label:'Conclusion' },
-    { id:'fc-reflection',   label:'Media Literacy Reflection' },
-  ];
-
-  // Determine selected verdict
-  const verdictEl = document.querySelector('.verdict-btn.selected');
-  const verdictText = verdictEl ? verdictEl.textContent.trim() : '— not selected —';
-
-  // Build a clean print-only div
-  const printDiv = document.createElement('div');
-  printDiv.id = 'printOverlay';
-  printDiv.style.cssText = [
-    'background:#fff',
-    'padding:3rem 4rem',
-    "font-family:'DM Sans',sans-serif", 'color:#0f0e0e'
-  ].join(';');
-
-  let html = `
-    <div style="border-bottom:3px solid #0f0e0e;padding-bottom:0.8rem;margin-bottom:1.8rem;">
-      <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:#7a736a;margin-bottom:0.3rem;">Fact-Check Report · The Media &amp; Society</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;">My Fact-Check Report</div>
-    </div>`;
-
-  fields.forEach(f => {
-    const el = document.getElementById(f.id);
-    const val = el ? escape(el.value.trim()) : '';
-    html += `
-      <div style="margin-bottom:1.2rem;">
-        <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a736a;margin-bottom:0.3rem;">${f.label}</div>
-        <div style="font-size:0.88rem;line-height:1.75;border-left:3px solid #d0c8b8;padding-left:0.8rem;min-height:1.5rem;white-space:pre-wrap;">${val || '<span style="color:#aaa;">— not filled in —</span>'}</div>
-      </div>`;
-    // Insert verdict block after Evidence
-    if (f.id === 'fc-evidence') {
-      html += `
-        <div style="margin-bottom:1.2rem;">
-          <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:#7a736a;margin-bottom:0.3rem;">Verdict</div>
-          <div style="font-size:0.95rem;font-weight:700;padding:0.4rem 0.8rem;display:inline-block;border:2px solid #0f0e0e;">${verdictText}</div>
-        </div>`;
-    }
-  });
-
-  html += `<div style="margin-top:2.5rem;padding-top:0.8rem;border-top:1px solid #d0c8b8;font-family:'Space Mono',monospace;font-size:0.52rem;color:#aaa;">© 2026 Christin-Maria Leukert · The Media &amp; Society · CC BY-NC-ND 4.0</div>`;
-
-  printDiv.innerHTML = html;
-  document.body.appendChild(printDiv);
-
-  // Give the browser a full layout frame before printing so @media print rules are applied correctly
-  window.addEventListener('afterprint', function handler() {
-    document.body.removeChild(printDiv);
-    window.removeEventListener('afterprint', handler);
-  }, { once: true });
-  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
 }
 
 // ===== MIND MAP POPUP DATA =====
